@@ -123,33 +123,34 @@
 					<img src="<?= base_url("assets/images/qrcode/") . $data['qrcode'] ?>" width="84px">
 					<p style="font-size: 11px;"><?= $data['name_patient'] ?></p>
 				</td>
-				<td align="right">
+				<td width="45%"></td>
+				<td align="center">
 					<?php if ($data['id_clinic'] == 1) : ?>
-						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 						<br><br><br><br><br><br>
-						<p><b>dr. Said Husain<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-						<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p><b>dr. Said Husain<b></p>
+						<p><i>Examination</i></p>
 					<?php elseif ($data['id_clinic'] == 2) : ?>
-						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 						<br><br><br><br><br><br>
 						<p><b>dr. Abdul Hr Korompot, MARS<b></p>
-						<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p><i>Examination</i></p>
 					<?php elseif ($data['id_clinic'] == 3) : ?>
-						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 						<br><br><br><br><br><br>
-						<p><b>dr. Abdul Arif Irsan<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-						<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p><b>dr. Abdul Arif Irsan<b></p>
+						<p><i>Examination</i></p>
 					<?php elseif ($data['id_clinic'] == 4) : ?>
-						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 						<br><br><br><br><br><br>
 						<p><b>dr. Rudolf Fernando Wibowo<b></p>
-						<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p><i>Examination</i></p>
 					<?php elseif ($data['id_clinic'] == 5) : ?>
-						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 						<br>
 						<br><br><br><br><br><br>
-						<p><b>dr. Widha Puji Ismayawati<b>&nbsp;&nbsp;&nbsp;</p>
-						<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p><b>dr. Widha Puji Ismayawati<b></p>
+						<p><i>Examination</i></p>
 					<?php endif ?>
 				</td>
 			</tr>

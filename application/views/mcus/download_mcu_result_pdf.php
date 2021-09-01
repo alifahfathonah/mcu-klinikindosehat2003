@@ -130,42 +130,82 @@
 	</table>
 	<br>
 	<table width="100%" style="margin-top: 12.5px;">
-		<tr>
-			<td align="center" width="25%;">
-				<img src="<?= base_url("assets/images/qrcode/") . $data['qrcode'] ?>" width="84px">
-				<p style="font-size: 11px;"><?= $data['name_patient'] ?></p>
-			</td>
-			<td align="right">
-				<?php if ($data['id_clinic'] == 1) : ?>
-					<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+		<?php if ($data['id_clinic'] == 1) : ?>
+			<tr>
+				<td align="center" width="25%;">
+					<img src="<?= base_url("assets/images/qrcode/") . $data['qrcode'] ?>" width="115px">
+					<p style="font-size: 16px;"><?= $data['name_patient'] ?></p>
+				</td>
+				<td width="45%"></td>
+				<td align="center">
+					<p style="font-size: 16px;">Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 					<br>
-					<img src="<?= base_url("assets/images/pdftemplate/said.png") ?>" width="150px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<p><b>dr. Said Husain<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-					<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-				<?php elseif ($data['id_clinic'] == 2) : ?>
-					<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-					<br><br><br><br><br><br>
-					<p><b>dr. Abdul Hr Korompot, MARS<b></p>
-					<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-				<?php elseif ($data['id_clinic'] == 3) : ?>
-					<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-					<br><br><br><br><br><br>
-					<p><b>dr. Abdul Arif Irsan<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-					<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-				<?php elseif ($data['id_clinic'] == 4) : ?>
-					<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-					<br><br><br><br><br><br>
-					<p><b>dr. Rudolf Fernando Wibowo<b></p>
-					<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-				<?php elseif ($data['id_clinic'] == 5) : ?>
-					<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+					<img src="<?= base_url("assets/images/pdftemplate/dic-said.png") ?>" width="400px" style="margin-top: -25px; margin-bottom: -35px;">
+					<p style="font-size: 16px;"><b>dr. Said Husain<b></p>
+					<p style="font-size: 16px;"><i>Examination</i></p>
+				</td>
+			</tr>
+		<?php elseif ($data['id_clinic'] == 2) : ?>
+			<tr>
+				<td align="center" width="25%;">
+					<img src="<?= base_url("assets/images/qrcode/") . $data['qrcode'] ?>" width="115px">
+					<p style="font-size: 16px;"><?= $data['name_patient'] ?></p>
+				</td>
+				<td width="45%"></td>
+				<td align="center">
+					<p style="font-size: 16px;">Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 					<br>
-					<img src="<?= base_url("assets/images/pdftemplate/widha.png") ?>" width="150px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<p><b>dr. Widha Puji Ismayawati<b>&nbsp;&nbsp;&nbsp;</p>
-					<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-				<?php endif ?>
-			</td>
-		</tr>
+					<img src="<?= base_url("assets/images/pdftemplate/dic.png") ?>" width="400px" style="margin-top: -25px; margin-bottom: -35px;">
+					<p style="font-size: 16px;"><b>dr. Abdul Hr Korompot, MARS<b></p>
+					<p style="font-size: 16px;"><i>Examination</i></p>
+				</td>
+			</tr>
+		<?php elseif ($data['id_clinic'] == 3) : ?>
+			<tr>
+				<td align="center" width="25%;">
+					<img src="<?= base_url("assets/images/qrcode/") . $data['qrcode'] ?>" width="115px">
+					<p style="font-size: 16px;"><?= $data['name_patient'] ?></p>
+				</td>
+				<td width="45%"></td>
+				<td align="center">
+					<p style="font-size: 16px;">Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
+					<br>
+					<img src="<?= base_url("assets/images/pdftemplate/dic.png") ?>" width="400px" style="margin-top: -25px; margin-bottom: -35px;">
+					<p style="font-size: 16px;"><b>dr. Abdul Arif Irsan<b></p>
+					<p style="font-size: 16px;"><i>Examination</i></p>
+				</td>
+			</tr>
+		<?php elseif ($data['id_clinic'] == 4) : ?>
+			<tr>
+				<td align="center" width="25%;">
+					<img src="<?= base_url("assets/images/qrcode/") . $data['qrcode'] ?>" width="115px">
+					<p style="font-size: 16px;"><?= $data['name_patient'] ?></p>
+				</td>
+				<td width="45%"></td>
+				<td align="center">
+					<p style="font-size: 16px;">Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
+					<br>
+					<img src="<?= base_url("assets/images/pdftemplate/dic.png") ?>" width="400px" style="margin-top: -25px; margin-bottom: -35px;">
+					<p style="font-size: 16px;"><b>dr. Rudolf Fernando Wibowo<b></p>
+					<p style="font-size: 16px;"><i>Examination</i></p>
+				</td>
+			</tr>
+		<?php elseif ($data['id_clinic'] == 5) : ?>
+			<tr>
+				<td align="center" width="25%;">
+					<img src="<?= base_url("assets/images/qrcode/") . $data['qrcode'] ?>" width="115px">
+					<p style="font-size: 16px;"><?= $data['name_patient'] ?></p>
+				</td>
+				<td width="45%"></td>
+				<td align="center">
+					<p style="font-size: 16px;">Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
+					<br>
+					<img src="<?= base_url("assets/images/pdftemplate/dic-widha.png") ?>" width="400px" style="margin-top: -25px; margin-bottom: -35px;">
+					<p style="font-size: 16px;"><b>dr. Widha Puji Ismayawati<b></p>
+					<p style="font-size: 16px;"><i>Examination</i></p>
+				</td>
+			</tr>
+		<?php endif ?>
 	</table>
 	<table width="100%">
 		<tr>
