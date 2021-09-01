@@ -126,8 +126,7 @@
 				<td align="right">
 					<?php if ($data['id_clinic'] == 1) : ?>
 						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-						<br>
-						<img src="<?= base_url("assets/images/pdftemplate/said.png") ?>" width="150px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<br><br><br><br><br><br>
 						<p><b>dr. Said Husain<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 						<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 					<?php elseif ($data['id_clinic'] == 2) : ?>
@@ -148,7 +147,7 @@
 					<?php elseif ($data['id_clinic'] == 5) : ?>
 						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 						<br>
-						<img src="<?= base_url("assets/images/pdftemplate/widha.png") ?>" width="150px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<br><br><br><br><br><br>
 						<p><b>dr. Widha Puji Ismayawati<b>&nbsp;&nbsp;&nbsp;</p>
 						<p><i>Examination</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 					<?php endif ?>
