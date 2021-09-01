@@ -62,7 +62,7 @@
 	<table class="identity" width="100%" cellpadding="4" cellspacing="0" style="border: 1px solid black; margin-top: 5px;">
 		<tr>
 			<td><b>COMPANY</b></td>
-			<td colspan="3" style="border-right: 1px solid black;">: <?= ($data['company_name'] == 0) ? ('PRIVATE') : ($data['company_name']) ?></td>
+			<td colspan="3" style="border-right: 1px solid black;">: <?= ($data['id_company'] == 0) ? ('PRIVATE') : ($data['company_name']) ?></td>
 		</tr>
 		<tr>
 			<td><b>MCU NO.</b></td>
@@ -111,11 +111,11 @@
 		<tr>
 			<td>&nbsp;1. ALCOHOL HISTORY</td>
 			<td align="center" style="border-right: 1px solid black;"><?= ($data['alcohol_history'] == '0') ? ('No') : ('Yes') ?></td>
-			<td align="center" rowspan="2" style="border-right: 1px solid black; border-bottom: 1px solid black;"><?= $data['height'] ?> cm</td>
-			<td align="center" rowspan="2" style="border-right: 1px solid black; border-bottom: 1px solid black;"><?= $data['weight'] ?> kg</td>
+			<td align="center" rowspan="2" style="border-right: 1px solid black; border-bottom: 1px solid black;"><?= number_format($data['height']) ?> cm</td>
+			<td align="center" rowspan="2" style="border-right: 1px solid black; border-bottom: 1px solid black;"><?= number_format($data['weight']) ?> kg</td>
 			<td align="center" rowspan="2" style="border-right: 1px solid black; border-bottom: 1px solid black;"><?= $data['blood_pressure'] ?> mmHg</td>
-			<td align="center" rowspan="2" style="border-right: 1px solid black; border-bottom: 1px solid black;"><?= $data['pulse_regular'] ?> X/min</td>
-			<td align="center" rowspan="2" style="border-bottom: 1px solid black;"><?= $data['respiratory_rate'] ?> X/min</td>
+			<td align="center" rowspan="2" style="border-right: 1px solid black; border-bottom: 1px solid black;"><?= number_format($data['pulse_regular']) ?> X/min</td>
+			<td align="center" rowspan="2" style="border-bottom: 1px solid black;"><?= number_format($data['respiratory_rate']) ?> X/min</td>
 		</tr>
 		<tr>
 			<td>&nbsp;2. ALLERGIC HISTORY</td>
