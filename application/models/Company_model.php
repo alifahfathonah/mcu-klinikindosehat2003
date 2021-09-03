@@ -70,14 +70,14 @@ class Company_model extends CI_Model
 
 	// End Datatables
 
-	function add_company($data)
+	function store_to_table_companies($data)
 	{
 		$this->db->insert('companies', $data);
 
 		return TRUE;
 	}
 
-	function edit_company($id, $data)
+	function update_table_companies($id, $data)
 	{
 		$this->db->where('id', $id);
 		$this->db->update('companies', $data);

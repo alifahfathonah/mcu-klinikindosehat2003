@@ -212,7 +212,16 @@
 			<td>
 				<b style="text-align:left !important;">Date Of Examination, <?= date('F d, Y', strtotime($data["date_examination"])) ?></b>
 				<br>
-				<b>Expiration Of Validity, <?= date('F d, ', strtotime($data["date_examination"])) . date('Y', strtotime($data["date_examination"]) + 63072000) ?></b>
+				
+				<?php
+					if ($data['validity_period'] == '0') {
+						$masa_berlaku = 63072000;	
+					} else {
+						$masa_berlaku = 31536000;
+					}
+				?>
+
+				<b>Expiration Of Validity, <?= date('F d, ', strtotime($data["date_examination"])) . date('Y', strtotime($data["date_examination"]) + $masa_berlaku) ?></b>
 			</td>
 		</tr>
 	</table>

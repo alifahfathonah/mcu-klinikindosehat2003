@@ -304,9 +304,10 @@ class Mcu extends CI_Controller
 			$medical_record_number = $this->input->post('medical_record_number');
 
 			$data_mcus_v1 = [
-				'mcu_manual' => $this->input->post('mcu_manual'),
-				'is_fit'	 => $this->input->post('is_fit'),
-				'updated_at' => date('Y-m-d H:i:s')
+				'mcu_manual' 	  => $this->input->post('mcu_manual'),
+				'is_fit'	  	  => $this->input->post('is_fit'),
+				'validity_period' => ($this->input->post('validity_period') == NULL) ? ('0') : ('1'),
+				'updated_at' 	  => date('Y-m-d H:i:s')
 			];
 
 			$data_mcus_v2 = [
@@ -420,9 +421,10 @@ class Mcu extends CI_Controller
 			$medical_record_number = $this->input->post('medical_record_number');
 
 			$data_mcus_v1 = [
-				'mcu_manual' => $this->input->post('mcu_manual'),
-				'is_fit'	 => $this->input->post('is_fit'),
-				'updated_at' => date('Y-m-d H:i:s')
+				'mcu_manual' 	  => $this->input->post('mcu_manual'),
+				'is_fit'	  	  => $this->input->post('is_fit'),
+				'validity_period' => ($this->input->post('validity_period') == NULL) ? ('0') : ('1'),
+				'updated_at' 	  => date('Y-m-d H:i:s')
 			];
 
 			$data_mcus_v2 = [
@@ -570,7 +572,7 @@ class Mcu extends CI_Controller
 				'title'  		 => 'MCU',
 				'data' 	 		 => $lab,
 				'is_all_examine' => $is_all_examine,
-				'clinics' => $this->clinic->get_list_of_clinic()
+				'clinics'		 => $this->clinic->get_list_of_clinic()
 			];
 
 			$this->load->view('templates/header', $data);
@@ -593,6 +595,7 @@ class Mcu extends CI_Controller
 				'id_clinic' 	   => $this->input->post('id_clinic'),
 				'is_fit'		   => $this->input->post('is_fit'),
 				'date_examination' => $this->input->post('date_examination'),
+				'validity_period'  => ($this->input->post('validity_period') == NULL) ? ('0') : ('1'),
 				'updated_at' 	   => date('Y-m-d H:i:s')
 			];
 
@@ -723,6 +726,7 @@ class Mcu extends CI_Controller
 				'id_clinic' 	   => $this->input->post('id_clinic'),
 				'is_fit'		   => $this->input->post('is_fit'),
 				'date_examination' => $this->input->post('date_examination'),
+				'validity_period'  => ($this->input->post('validity_period') == NULL) ? ('0') : ('1'),
 				'updated_at' 	   => date('Y-m-d H:i:s')
 			];
 

@@ -73,7 +73,7 @@ class Company extends CI_Controller
 			'created_at' => date("Y-m-d H:i:s")
 		];
 
-		$this->company->add_company($data);
+		$this->company->store_to_table_companies($data);
 
 		$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'New Company has been added!',showConfirmButton: false,timer: 1500})</script>");
 
@@ -88,7 +88,7 @@ class Company extends CI_Controller
 			'updated_at' => date('Y-m-d H:i:s')
 		];
 
-		$this->company->edit_company($this->input->post('id'), $data);
+		$this->company->update_table_companies($this->input->post('id'), $data);
 
 		$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'Data Company has been updated!',showConfirmButton: false,timer: 1500})</script>");
 

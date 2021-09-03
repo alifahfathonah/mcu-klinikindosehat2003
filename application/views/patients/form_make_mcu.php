@@ -64,7 +64,7 @@
 		<?php else : 
 			$clinic_name = $this->db->get_where('clinics', ['id' => $this->session->userdata('site')])->row_array();
 		?>
-			<input type="hidden" name="id_clinic" value="<?= $this->session->userdata('site') ?>">
+			<input type="hidden" id="id_clinic" name="id_clinic" value="<?= $this->session->userdata('site') ?>">
 			<div class="form-group">
 				<label for="id_clinic"><b>Klinik / <i>Clinic</i></b></label>
 				<input type="text" class="form-control form-control-sm" name="id_clinic_name" value="<?= $clinic_name['name'] ?>" disabled>

@@ -74,7 +74,7 @@ class Clinic extends CI_Controller
 			'created_at' => date("Y-m-d H:i:s")
 		];
 
-		$this->clinic->add_new_clinic($data);
+		$this->clinic->store_to_table_clinics($data);
 
 		$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'New clinic has been added!',showConfirmButton: false,timer: 1500})</script>");
 
@@ -90,7 +90,7 @@ class Clinic extends CI_Controller
 			'updated_at' => date("Y-m-d H:i:s")
 		];
 
-		$this->clinic->edit_clinic($this->input->post('id'), $data);
+		$this->clinic->update_table_clinics($this->input->post('id'), $data);
 
 		$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'Data clinic has been updated!',showConfirmButton: false,timer: 1500})</script>");
 

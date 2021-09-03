@@ -88,7 +88,15 @@
 			<td style="border-right: 1px solid black;">&nbsp;Right Eye</td>
 			<td align="center" style="border-right: 1px solid black;"><?= $data['right_eye_without'] ?></td>
 			<td align="center" style="border-right: 1px solid black;"><?= $data['right_eye_with'] ?></td>
-			<td align="center" colspan="2" rowspan="6" style="border-bottom: 1px solid black;"><?= ($data['color_vision'] == '0') ? ('ABNORMAL') : ('NORMAL') ?></td>
+			<td align="center" colspan="2" rowspan="6" style="border-bottom: 1px solid black;">
+				<?php if ($data['color_vision'] == '0') : ?>
+					ABNORMAL
+				<?php elseif ($data['color_vision'] == '1') : ?>
+					NORMAL
+				<?php elseif ($data['color_vision'] == '2') : ?>
+					PARTIAL BLINDNESS<br>(Buta Warna Parsial / Buta Warna Sebagian)
+				<?php endif ?>
+			</td>
 		</tr>
 		<tr>
 			<td>&nbsp;6. BACK OR JOINT PROBLEM</td>

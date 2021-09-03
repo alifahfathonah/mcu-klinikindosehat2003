@@ -13,7 +13,7 @@ if (isset($_GET['search_patient'])) {
 		<h1 class="h3 font-weight-bolder">Daftar Pasien / <i>List of Patient</i></h1>
 		<div class="btn-toolbar mb-2 mb-md-0">
 			<div class="btn-group mr-2">
-				<a class="btn btn-sm btn-success" href="<?= base_url('patient/addPatient') ?>"><span data-feather="user-plus"></span> Tambah Pasien / <i>Add Patient</i></a>
+				<a class="btn btn-sm btn-success" href="<?= base_url('patient/registrationPatient') ?>"><span data-feather="user-plus"></span> Pendaftaran Pasien / <i>Patient Registration</i></a>
 			</div>
 		</div>
 	</div>
@@ -51,6 +51,8 @@ if (isset($_GET['search_patient'])) {
 					$this->db->select('patients.id as id, id_number, passport_number, patients.name as name, gender, place_of_birth, date_of_birth, patients.address as address, basic_safety_training, nationality, id_company, occupation, image, companies.name as company_name, companies.address as company_address');
 					$this->db->from('patients');
 					$this->db->join('companies', 'companies.id=patients.id_company', 'left');
+					$this->db->join('mcus_v1', 'mcus_v1.id_patient=patients.id', 'left');
+					$this->db->group_by('patients.id');
 					$this->db->like('id_number', $key);
 					$this->db->or_like('patients.name', $key);
 					$this->db->or_like('companies.name', $key);
@@ -61,6 +63,8 @@ if (isset($_GET['search_patient'])) {
 						$this->db->select('patients.id as id, id_number, passport_number, patients.name as name, gender, place_of_birth, date_of_birth, patients.address as address, basic_safety_training, nationality, id_company, occupation, image, companies.name as company_name, companies.address as company_address');
 						$this->db->from('patients');
 						$this->db->join('companies', 'companies.id=patients.id_company', 'left');
+						$this->db->join('mcus_v1', 'mcus_v1.id_patient=patients.id', 'left');
+						$this->db->group_by('patients.id');
 						$this->db->like('id_number', $key);
 						$this->db->or_like('patients.name', $key);
 						$this->db->or_like('companies.name', $key);
@@ -159,7 +163,7 @@ if (isset($_GET['search_patient'])) {
 								</div>
 								<div class="form-group">
 									<label class="font-weight-bolder">Alamat / <i>Address&nbsp;&nbsp;</i></label>
-									<textarea class="form-control form-control-sm" name="address" rows="3" required autocomplete="off"><?= $patient['address'] ?></textarea>
+									<textarea class="form-control form-control-sm" name="address" rows="3" autocomplete="off"><?= $patient['address'] ?></textarea>
 								</div>
 								<div class="form-group">
 									<label class="font-weight-bolder">Nomor BST / <i>BST Number&nbsp;&nbsp;</i></label>

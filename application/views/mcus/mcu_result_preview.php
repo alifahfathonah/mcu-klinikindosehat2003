@@ -179,7 +179,11 @@
 
 		<footer class="mastfoot mt-auto text-center font-weight-bold">
 			<?php
-			$masa_berlaku = strtotime($data['date_examination']) + 63072000;
+				if ($data['validity_period'] == '0') {
+					$masa_berlaku = strtotime($data['date_examination']) + 63072000;	
+				} else {
+					$masa_berlaku = strtotime($data['date_examination']) + 31536000;
+				}
 			?>
 			<div class="tgl-berlaku">
 				Berlaku sampai dengan tanggal / <i>valid until the date</i> <?= date('d F Y', $masa_berlaku) ?>

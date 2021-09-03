@@ -75,14 +75,14 @@ class Clinic_model extends CI_Model
 		return $this->db->get_where('clinics', ['is_deleted' => 0])->result_array();
 	}
 
-	function add_new_clinic($data)
+	function store_to_table_clinics($data)
 	{
 		$this->db->insert('clinics', $data);
 
 		return TRUE;
 	}
 
-	function edit_clinic($id, $data)
+	function update_table_clinics($id, $data)
 	{
 		$this->db->where('id', $id);
 		$this->db->update('clinics', $data);

@@ -126,6 +126,19 @@
 										</select>
 									</td>
 								</tr>
+								<tr>
+									<td colspan="6" align="center">
+										<label class="font-weight-bolder" for="is_fit"><br>Masa Berlaku Hasil Laboratorium / <i>Validity Periode of Laboratory Result</i></label>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="6">
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" id="validity_period" name="validity_period" value="1" <?= ($data['validity_period'] == '1' ? ('checked') : ('')) ?>>
+											<label class="form-check-label" for="validity_period">Check if the validity period of laboratory results for 1 year</label>
+										</div>
+									</td>
+								</tr>
 							</tbody>
 						</table>
 					</div>
@@ -429,6 +442,7 @@
 													<option value="" disabled selected>Pilih Penglihatan Warna / Select Color Vision</option>
 													<option value="0" <?= ($data['color_vision'] == '0' ? ('selected') : ('')) ?>>Abnormal</option>
 													<option value="1" <?= ($data['color_vision'] == '1' ? ('selected') : ('')) ?>>Normal</option>
+													<option value="2" <?= ($data['color_vision'] == '2' ? ('selected') : ('')) ?>>Partial Blindness</option>
 												</select>
 											</td>
 										</tr>
