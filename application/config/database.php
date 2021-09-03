@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost:3306',
-	'username' => 'u1353130_mcu_klinikindosehat2003_v2',
-	'password' => 'Endar@2001!@#',
-	'database' => 'u1353130_mcu_klinikindosehat2003_v2',
+	'hostname' => 'localhost',
+	'username' => 'root',
+	'password' => '',
+	'database' => 'mcu_klinikindosehat2003',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
