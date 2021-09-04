@@ -117,6 +117,10 @@
 							</select>
 						</div>
 						<div class="form-group">
+							<label class="font-weight-bolder" for="mcu_manual">Nomor Rekam Medis / <i>Medical Record Number</i></label>
+							<input type="text" class="form-control form-control-sm" name="mcu_manual" id="mcu_manual" placeholder="Enter Medical Record Number..." required autocomplete="off">
+						</div>
+						<div class="form-group">
 							<label class="font-weight-bolder" for="date_examination">Tanggal Pemeriksaan / <i>Date of Examination</i></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -131,10 +135,6 @@
 								<option value="0" disabled selected>Select Payment Type</option>
 								<option value="cash">CASH</option>
 								<option value="debit">DEBIT / TRANSFER</option>
-								<?php if ($patient['id_company'] == 0) : ?>
-								<?php else : ?>
-									<option value="company">COMPANY</option>
-								<?php endif ?>
 							</select>
 						</div>
 						<div class="form-group">
@@ -211,6 +211,26 @@
 		document.getElementById("occupation").removeAttribute("readonly", "");
 		document.getElementById("occupation").value = '';
 	}
+
+	$('#id_company').on('change', function() {
+		if (this.value > 0) {
+			$('<option/>').val('company').text('TAGIHAN / INVOICE').appendTo('#type_transaction')
+		} else {
+			$("#type_transaction option[value='company']").remove();
+			$("#total_price").attr("value", "");
+			$("#total_price").prop("readonly", false);
+		}
+	});
+
+	$('#type_transaction').on('change', function() {
+		if (this.value == 'company') {
+			$("#total_price").attr("value", 0);
+			$("#total_price").prop("readonly", true);
+		} else {
+			$("#total_price").attr("value", "");
+			$("#total_price").prop("readonly", false);
+		}
+	});
 
 	jQuery('#date_examination').datetimepicker({
 			timepicker: false,
@@ -320,6 +340,7 @@
 		var occupation = $('#occupation').val();
 		var id_clinic = $('#id_clinic').val();
 		var type_examination = $('#type_examination').val();
+		var mcu_manual = $('#mcu_manual').val();
 		var date_examination = $('#date_examination').val();
 		var type_transaction = $('#type_transaction').val();
 		var total_price = $('#total_price').val();
@@ -345,6 +366,7 @@
 					occupation: occupation,
 					id_clinic: id_clinic,
 					type_examination: type_examination,
+					mcu_manual: mcu_manual,
 					date_examination: date_examination,
 					type_transaction: type_transaction,
 					total_price: total_price,
