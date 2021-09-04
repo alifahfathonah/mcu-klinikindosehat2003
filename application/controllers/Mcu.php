@@ -8,7 +8,8 @@ class Mcu extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('Mcu_model', 'mcu');
-		$this->load->model('clinic_model', 'clinic');
+		$this->load->model('Clinic_model', 'clinic');
+		$this->load->model('Patient_model', 'patient');
 	}
 
 	/** 
@@ -303,6 +304,11 @@ class Mcu extends CI_Controller
 
 			$medical_record_number = $this->input->post('medical_record_number');
 
+			$data_patients = [
+				'address' 	 => $this->input->post('address'),
+				'updated_at' => date('Y-m-d H:i:s')
+			];
+
 			$data_mcus_v1 = [
 				'mcu_manual' 	  => $this->input->post('mcu_manual'),
 				'is_fit'	  	  => $this->input->post('is_fit'),
@@ -384,6 +390,7 @@ class Mcu extends CI_Controller
 				'details'	 			 => $this->input->post('details')
 			];
 
+			$this->patient->update_table_patients($this->input->post('id_patient'), $data_patients);
 			$this->mcu->update_table_mcus_v1($medical_record_number, $data_mcus_v1);
 			$this->mcu->store_to_table_mcus_v2($data_mcus_v2);
 
@@ -420,6 +427,11 @@ class Mcu extends CI_Controller
 
 			$medical_record_number = $this->input->post('medical_record_number');
 
+			$data_patients = [
+				'address' 	 => $this->input->post('address'),
+				'updated_at' => date('Y-m-d H:i:s')
+			];
+
 			$data_mcus_v1 = [
 				'mcu_manual' 	  => $this->input->post('mcu_manual'),
 				'is_fit'	  	  => $this->input->post('is_fit'),
@@ -501,6 +513,7 @@ class Mcu extends CI_Controller
 				'details'	 			 => $this->input->post('details')
 			];
 
+			$this->patient->update_table_patients($this->input->post('id_patient'), $data_patients);
 			$this->mcu->update_table_mcus_v1($medical_record_number, $data_mcus_v1);
 			$this->mcu->store_to_table_mcus_v2($data_mcus_v2);
 
