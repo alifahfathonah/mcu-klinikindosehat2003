@@ -153,6 +153,7 @@ class Patient extends CI_Controller
 
 			$data_mcus_v1 = [
 				'medical_record_number' => $medical_record_number,
+				'mcu_manual'			=> $this->input->post('mcu_manual'),
 				'id_clinic'				=> $this->input->post('id_clinic'),
 				'id_patient'			=> $id_patient_exist,
 				'id_number_patient'		=> $id_number,
@@ -239,6 +240,7 @@ class Patient extends CI_Controller
 
 			$data_mcus_v1 = [
 				'medical_record_number' => $medical_record_number,
+				'mcu_manual'			=> $this->input->post('mcu_manual'),
 				'id_clinic'				=> $this->input->post('id_clinic'),
 				'id_patient'			=> $id_patient,
 				'id_number_patient'		=> $id_number,
