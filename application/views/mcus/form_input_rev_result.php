@@ -47,6 +47,7 @@
 		</div>
 	</div>
 	<form method="POST" action="<?= base_url('mcu/inputRevResultProcess') ?>" enctype="multipart/form-data" class="p-3 mt-n3">
+		<input type="hidden" name="id_patient" value="<?= $data['id_patient'] ?>">
 		<input type="hidden" name="medical_record_number" value="<?= $data['medical_record_number'] ?>">
 		<div class="row">
 			<div class="col-lg-12">
@@ -56,13 +57,22 @@
 							<tbody>
 								<tr>
 									<td colspan="6" align="center">
+										<label class="font-weight-bolder" for="address">Alamat Pasien / <i>Patient Address</i></label>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="6">
+										<textarea name="address" id="address" class="form-control form-control-sm" rows="3" autocomplete="off"><?= ($data['address'] != NULL || $data['address'] != "") ? ($data["address"]) : ("") ?></textarea><br>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="6" align="center">
 										<label class="font-weight-bolder" for="mcu_manual">Nomor Rekam Medis / <i>Medical Record Number</i> *</label>
 									</td>
 								</tr>
 								<tr>
 									<td colspan="6">
-										<input class="form-control form-control-sm" type="text" id="mcu_manual" name="mcu_manual" placeholder="Must Unique..." required autocomplete="off" required>
-										<br>
+										<input class="form-control form-control-sm" type="text" id="mcu_manual" name="mcu_manual" placeholder="Must Unique..." <?= ($data['mcu_manual'] != NULL || $data['mcu_manual'] != "") ? ('value="'. $data["mcu_manual"] .'"') : ("") ?> required autocomplete="off">
 									</td>
 								</tr>
 								<tr>
