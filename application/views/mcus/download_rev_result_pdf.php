@@ -288,7 +288,7 @@
 			<td align="center" style="border-right: 1px solid black;"><?= ($data['psychiatric_problem'] == '0') ? ('No') : ('Yes') ?></td>
 			<td colspan="3">&nbsp;17. CENTRAL NERVOUS SYSTEM</td>
 			<td><?= ($data['central_nervous_system'] == '0') ? ('No') : ('Yes') ?></td>
-			<td rowspan="6" align="center" style="border-bottom: 1px solid black;">
+			<td rowspan="7" align="center" style="border-bottom: 1px solid black;">
 				<img src="<?= base_url("assets/images/qrcode/") . $data['qrcode'] ?>" width="84px">
 			</td>
 		</tr>
@@ -319,8 +319,16 @@
 			<td></td>
 		</tr>
 		<tr>
-			<td style="border-bottom: 1px solid black;">&nbsp;34. TUBERCULOSIS</td>
-			<td align="center" style="border-right: 1px solid black; border-bottom: 1px solid black;"><?= ($data['tuberculosis'] == '0') ? ('No') : ('Yes') ?></td>
+			<td>&nbsp;34. TUBERCULOSIS</td>
+			<td align="center" style="border-right: 1px solid black;"><?= ($data['tuberculosis'] == '0') ? ('No') : ('Yes') ?></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td style="border-bottom: 1px solid black;">&nbsp;35. SMOKING</td>
+			<td align="center" style="border-right: 1px solid black; border-bottom: 1px solid black;"><?= ($data['smoking'] == '0' | $data['smoking'] == NULL) ? ('No') : ('Yes') ?></td>
 			<td style="border-bottom: 1px solid black;"></td>
 			<td style="border-bottom: 1px solid black;"></td>
 			<td style="border-bottom: 1px solid black;"></td>

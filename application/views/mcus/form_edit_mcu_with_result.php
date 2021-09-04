@@ -283,6 +283,11 @@
 									<input class="form-check-input" type="checkbox" id="skin_problem" name="skin_problem" value="1" <?= ($data['skin_problem'] == '1' ? ('checked') : ('')) ?>>
 									<label class="form-check-label" for="skin_problem">Skin Problem</label>
 								</div>
+								<br>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" id="smoking" name="smoking" value="1" <?= ($data['smoking'] == '1' ? ('checked') : ('')) ?>>
+									<label class="form-check-label" for="smoking">Smoking</label>
+								</div>
 							</div>
 							<div class="col-6 col-sm-6 col-md-6 col-lg-3">
 								<div class="form-check form-check-inline">
