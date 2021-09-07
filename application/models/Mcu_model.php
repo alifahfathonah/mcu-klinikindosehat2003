@@ -126,7 +126,7 @@ class Mcu_model extends CI_Model {
 		} else {
 			$this->db->where('id_clinic', $this->session->userdata('site'));
 		}
-		// $this->db->where("DATE_FORMAT(mcus_v1.created_at,'%Y-%m-%d')", date('Y-m-d'));
+		$this->db->where("DATE_FORMAT(mcus_v1.created_at,'%Y-%m-%d')", date('Y-m-d'));
 		$this->db->order_by('mcus_v1.created_at DESC');
 		$this->db->limit($limit, $start);
 		return $this->db->get()->result_array();
