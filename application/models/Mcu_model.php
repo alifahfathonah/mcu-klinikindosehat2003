@@ -79,13 +79,57 @@ class Mcu_model extends CI_Model {
 
 	function get_data_mcu_by_medical_record_number($medical_record_number)
 	{
-		$this->db->select('mcus_v1.id as id, mcus_v1.medical_record_number as medical_record_number, mcu_manual, id_clinic, id_patient, id_number_patient, name_patient, no_transaction, type_examination, is_fit, date_examination, qrcode, passport_number, gender, place_of_birth, date_of_birth, patients.address as address, basic_safety_training, nationality, id_company, occupation, image, companies.name as company_name, alcohol_history, allergic_history, amputation, blood_disorder, balance_problem, back_or_joint_problem, colour_blindness, cancer, diabetes, digestive_disorder, depresion, epilepsy, eye_vision_problem, ear_problem, fracture, genital_disorder, heart_surgery, heart_disease, high_blood_pressure, hernia, infectious_disease, kidney_problem, lung_disease, liver_problem, lost_of_memory, narcotic_history, neurogical_disease, operation_surgery, psychiatric_problem, restricted_mobility, skin_problem, sleep_problem, thyroid_problem, tuberculosis, smoking, height, weight, blood_pressure, pulse_regular, respiratory_rate, right_eye_without, left_eye_without, both_eye_without, right_eye_with, left_eye_with, both_eye_with, color_vision, general_appearance, eyes, ears, nose, mouth, throat, neck, throid, lymp_node, lungs, hearts, abdomen, urogenital_system, upper_extremities, lower_extremities, back_abnormality, hernia_2, central_nervous_system, skin_nails, speech, other, right_ear, left_ear, details, validity_period');
+		$this->db->select('mcus_v1.id as id, mcus_v1.medical_record_number as medical_record_number, mcu_manual, id_clinic, id_patient, id_number_patient, name_patient, no_transaction, type_examination, is_fit, date_examination, qrcode, passport_number, gender, place_of_birth, date_of_birth, patients.address as address, basic_safety_training, nationality, id_company, occupation, image, companies.name as company_name, clinics.name as clinic_name, alcohol_history, allergic_history, amputation, blood_disorder, balance_problem, back_or_joint_problem, colour_blindness, cancer, diabetes, digestive_disorder, depresion, epilepsy, eye_vision_problem, ear_problem, fracture, genital_disorder, heart_surgery, heart_disease, high_blood_pressure, hernia, infectious_disease, kidney_problem, lung_disease, liver_problem, lost_of_memory, narcotic_history, neurogical_disease, operation_surgery, psychiatric_problem, restricted_mobility, skin_problem, sleep_problem, thyroid_problem, tuberculosis, smoking, height, weight, blood_pressure, pulse_regular, respiratory_rate, right_eye_without, left_eye_without, both_eye_without, right_eye_with, left_eye_with, both_eye_with, color_vision, general_appearance, eyes, ears, nose, mouth, throat, neck, throid, lymp_node, lungs, hearts, abdomen, urogenital_system, upper_extremities, lower_extremities, back_abnormality, hernia_2, central_nervous_system, skin_nails, speech, other, right_ear, left_ear, details, validity_period, mcus_v1.created_at as created_at');
 		$this->db->from('mcus_v1');
 		$this->db->join('mcus_v2', 'mcus_v2.medical_record_number=mcus_v1.medical_record_number', 'left');
 		$this->db->join('patients', 'patients.id=mcus_v1.id_patient', 'left');
 		$this->db->join('companies', 'companies.id=patients.id_company', 'left');
+		$this->db->join('clinics', 'clinics.id=mcus_v1.id_clinic', 'left');
 		$this->db->where('mcus_v1.medical_record_number', $medical_record_number);
 		return $this->db->get()->row_array();
+	}
+
+	function get_total_data_mcu_today($keyword = null)
+	{
+		date_default_timezone_set("Asia/Jakarta");
+		
+		if ($keyword) {
+			$this->db->like('medical_record_number', $keyword);
+			$this->db->or_like('mcu_manual', $keyword);
+			$this->db->or_like('id_number_patient', $keyword);
+			$this->db->or_like('name_patient', $keyword);
+		}
+
+		if ( $this->session->userdata('role') == 'superuser' ) {
+			return $this->db->get_where('mcus_v1', ["DATE_FORMAT(mcus_v1.created_at,'%Y-%m-%d')" => date('Y-m-d')])->num_rows();
+		} else {
+			return $this->db->get_where('mcus_v1', ["DATE_FORMAT(mcus_v1.created_at,'%Y-%m-%d')" => date('Y-m-d'), 'id_clinic' => $this->session->userdata('site')])->num_rows();
+		}
+	}
+
+	function get_data_mcu_today($limit, $start, $keyword = null)
+	{
+		date_default_timezone_set("Asia/Jakarta");
+
+		$this->db->select('mcus_v1.id as id, mcus_v1.medical_record_number as medical_record_number, mcu_manual, id_clinic, id_patient, id_number_patient, name_patient, no_transaction, type_examination, is_fit, date_examination, qrcode, passport_number, gender, place_of_birth, date_of_birth, patients.address as address, basic_safety_training, nationality, id_company, occupation, image, companies.name as company_name, validity_period, mcus_v1.created_at as created_at');
+		if ($keyword) {
+			$this->db->like('medical_record_number', $keyword);
+			$this->db->or_like('mcu_manual', $keyword);
+			$this->db->or_like('id_number_patient', $keyword);
+			$this->db->or_like('name_patient', $keyword);
+		}
+		$this->db->from('mcus_v1');
+		$this->db->join('patients', 'patients.id=mcus_v1.id_patient', 'left');
+		$this->db->join('companies', 'companies.id=patients.id_company', 'left');
+		if ( $this->session->userdata('role') == 'superuser' ) {
+			
+		} else {
+			$this->db->where('id_clinic', $this->session->userdata('site'));
+		}
+		// $this->db->where("DATE_FORMAT(mcus_v1.created_at,'%Y-%m-%d')", date('Y-m-d'));
+		$this->db->order_by('mcus_v1.created_at DESC');
+		$this->db->limit($limit, $start);
+		return $this->db->get()->result_array();
 	}
 
 	function store_to_table_mcus_v1($data)
