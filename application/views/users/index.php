@@ -95,6 +95,7 @@
 									<option selected disabled>Pilih Wewenang / Select the Role</option>
 									<option value="admin">Admin</option>
 									<option value="doctor">Doctor</option>
+									<option value="examinator">Examinator</option>
 								</select>
 							</div>
 							<div class="form-group">
@@ -158,6 +159,7 @@
 										<option selected disabled>Pilih Wewenang / Select the Role</option>
 										<option value="admin" <?php if ($user['role'] == 'admin') : ?> selected <?php endif ?>>Admin</option>
 										<option value="doctor" <?php if ($user['role'] == 'doctor') : ?> selected <?php endif ?>>Doctor</option>
+										<option value="examinator" <?php if ($user['role'] == 'examinator') : ?> selected <?php endif ?>>Examinator</option>
 									</select>
 								</div>
 								<div class="form-group">

@@ -10,6 +10,7 @@ class Mcu extends CI_Controller
 		$this->load->model('Mcu_model', 'mcu');
 		$this->load->model('Clinic_model', 'clinic');
 		$this->load->model('Patient_model', 'patient');
+		$this->session->unset_userdata('keyword');
 	}
 
 	/** 

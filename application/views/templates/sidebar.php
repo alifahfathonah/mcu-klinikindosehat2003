@@ -31,12 +31,22 @@
 							</a>
 						</li>
 					<?php endif ?>
-					<li class="nav-item">
-						<a class="nav-link <?php if ($title == 'Patient') : ?> active <?php endif ?>" href="<?= base_url('patient') ?>">
-							<span data-feather="users"></span>
-							Pasien / <i>Patient</i>
-						</a>
-					</li>
+					<?php if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'doctor') : ?>
+						<li class="nav-item">
+							<a class="nav-link <?php if ($title == 'Patient') : ?> active <?php endif ?>" href="<?= base_url('patient') ?>">
+								<span data-feather="users"></span>
+								Pasien / <i>Patient</i>
+							</a>
+						</li>
+					<?php endif ?>
+					<?php if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'examinator') : ?>
+						<li class="nav-item">
+							<a class="nav-link <?php if ($title == 'Patient Check') : ?> active <?php endif ?>" href="<?= base_url('patient/indexCheck') ?>">
+								<span data-feather="users"></span>
+								Cek Pasien / <i>Patient Check</i>
+							</a>
+						</li>
+					<?php endif ?>
 					<?php if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'admin') : ?>
 						<li class="nav-item">
 							<a class="nav-link <?php if ($title == 'Transaction') : ?> active <?php endif ?>" href="<?= base_url('transaction') ?>">
@@ -45,12 +55,14 @@
 							</a>
 						</li>
 					<?php endif ?>
-					<li class="nav-item">
-						<a class="nav-link <?php if ($title == 'MCU') : ?> active <?php endif ?>" href="<?= base_url('mcu') ?>">
-							<span data-feather="bar-chart-2"></span>
-							Hasil Laboratorium / <i>Laboratory Result</i>
-						</a>
-					</li>
+					<?php if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'doctor') : ?>
+						<li class="nav-item">
+							<a class="nav-link <?php if ($title == 'MCU') : ?> active <?php endif ?>" href="<?= base_url('mcu') ?>">
+								<span data-feather="bar-chart-2"></span>
+								Hasil Laboratorium / <i>Laboratory Result</i>
+							</a>
+						</li>
+					<?php endif ?>
 				</ul>
 			</div>
 		</nav>

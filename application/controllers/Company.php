@@ -11,6 +11,7 @@ class Company extends CI_Controller
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		}
+		$this->session->unset_userdata('keyword');
 	}
 
 	/** 

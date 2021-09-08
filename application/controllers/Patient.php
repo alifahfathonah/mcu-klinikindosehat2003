@@ -21,6 +21,8 @@ class Patient extends CI_Controller
 	 */
 	public function index()
 	{
+		$this->session->unset_userdata('keyword');
+
 		$data = [
 			'title'   => 'Patient',
 			'companies'	=> $this->company->get_datatables_company()
@@ -30,6 +32,84 @@ class Patient extends CI_Controller
 		$this->load->view('templates/navbar');
 		$this->load->view('templates/sidebar');
 		$this->load->view('patients/index');
+		$this->load->view('templates/footer');
+	}
+
+	public function indexCheck()
+	{
+		date_default_timezone_set("Asia/Jakarta");
+
+		if ($this->input->post('search')) {
+			$keyword = $this->input->post('keyword');
+			$this->session->set_userdata('keyword', $keyword);
+		} else {
+			$keyword = $this->session->userdata('keyword');
+		}
+
+		// Pagination 
+
+		// load
+		$this->load->library('pagination');
+		// config
+		$config['base_url']   = base_url('patient/indexCheck');
+		$config['total_rows'] = $this->mcu->get_total_data_mcu_today($keyword);
+		$config['per_page']   = 9;
+		// style
+		$config['full_tag_open'] = '<nav><ul class="pagination justify-content-end">';
+		$config['full_tag_close'] = '</ul></nav>';
+		
+		$config['first_link'] = 'First';
+		$config['first_tag_open'] = '<li class="page-item">';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_link'] = 'Last';
+		$config['last_tag_open'] = '<li class="page-item">';
+		$config['last_tag_close'] = '</li>';
+
+		$config['next_link'] = '&raquo';
+		$config['next_tag_open'] = '<li class="page-item">';
+		$config['next_tag_close'] = '</li>';
+
+		$config['prev_link'] = '&laquo';
+		$config['prev_tag_open'] = '<li class="page-item">';
+		$config['prev_tag_close'] = '</li>';
+
+		$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+
+		$config['num_tag_open'] = '<li class="page-item">';
+		$config['num_tag_close'] = '</li>';
+
+		$config['attributes'] = ['class' => 'page-link'];
+		// initialize
+		$this->pagination->initialize($config);
+
+
+		$start_data = $this->uri->segment(3);
+
+		$data = [
+			'title'    => 'Patient Check',
+			'patients' => $this->mcu->get_data_mcu_today($config['per_page'], $start_data, $keyword)
+		];
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('templates/navbar');
+		$this->load->view('templates/sidebar');
+		$this->load->view('patients/index_check');
+		$this->load->view('templates/footer');
+	}
+
+	public function detailIndexCheck($hash, $medical_record_number)
+	{
+		$data = [
+			'title'   => 'MCU',
+			'data'    => $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number)
+		];
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('templates/navbar');
+		$this->load->view('templates/sidebar');
+		$this->load->view('patients/detail_index_check');
 		$this->load->view('templates/footer');
 	}
 
