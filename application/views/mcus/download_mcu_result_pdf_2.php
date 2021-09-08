@@ -22,13 +22,15 @@
 		</tr>
 		<tr>
 			<td><b>SEX</b></td>
-			<td colspan="3" style="border-right: 1px solid black;">: <?= $data['gender'] ?></td>
+			<td>: <?= $data['gender'] ?></td>
+			<td><b>DATE EXAMINE</b></td>
+			<td style="border-right: 1px solid black;">: <?= date('d M Y') ?></td>
 		</tr>
 		<tr>
-			<td width="27%"><b>PLACE & DATE OF BIRTH</b></td>
-			<td width="26.5%">: <?= $data['place_of_birth'] . ' / ' . date('d F Y', strtotime($data['date_of_birth'])) ?></td>
-			<td width="12.5%"><b>NATIONALITY</b></td>
-			<td width="14%" style="border-right: 1px solid black;">: <?= $data['nationality'] ?></td>
+			<td width="26.75%"><b>PLACE & DATE OF BIRTH</b></td>
+			<td width="26.75%">: <?= $data['place_of_birth'] . ' / ' . date('d F Y', strtotime($data['date_of_birth'])) ?></td>
+			<td width="13.25%"><b>NATIONALITY</b></td>
+			<td width="13.25%" style="border-right: 1px solid black;">: <?= $data['nationality'] ?></td>
 			<td width="20%" rowspan="3"></td>
 		</tr>
 		<tr>
