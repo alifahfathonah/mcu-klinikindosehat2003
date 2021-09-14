@@ -65,7 +65,7 @@
 				<td><b>SEX</b></td>
 				<td>: <?= $data['gender'] ?></td>
 				<td><b>DATE EXAMINE</b></td>
-				<td style="border-right: 1px solid black;">: <?= date('d M Y', strtotime($data['created_at'])) ?></td>
+				<td style="border-right: 1px solid black;">: <?= date('d M Y', strtotime($data['date_examination'])) ?></td>
 			</tr>
 			<tr>
 				<td width="26.75%"><b>PLACE & DATE OF BIRTH</b></td>
