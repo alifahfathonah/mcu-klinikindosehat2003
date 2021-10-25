@@ -977,7 +977,7 @@ class Mcu extends CI_Controller
 	public function downloadExcelReportMcu()
 	{
 		date_default_timezone_set("Asia/Jakarta");
-		
+
 		$id_clinic = $this->input->post('id_clinic');
 		$start_date = $this->input->post('start_date');
 		$end_date = $this->input->post('end_date');
@@ -1024,7 +1024,7 @@ class Mcu extends CI_Controller
 		foreach($data as $index=>$d) {
 			$spreadsheet->setActiveSheetIndex(0)
 						->setCellValue('A' . $column, $index+1)
-						->setCellValue('B' . $column, $d['medical_record_number'])
+						->setCellValue('B' . $column, $d['mcu_manual'])
 						->setCellValue('C' . $column, $d['name_patient'])
 						->setCellValue('D' . $column, date('d F Y', strtotime($d['date_examination'])));
 			$column++;
