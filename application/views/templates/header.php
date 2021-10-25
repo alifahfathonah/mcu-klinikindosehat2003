@@ -21,6 +21,9 @@
 	<link rel="stylesheet" href="<?= base_url('assets/datatables/datatables.min.css') ?>">
 	<link rel="stylesheet" href="<?= base_url('assets/datatables/bootstrap4/css/dataTables.bootstrap4.min.css') ?>">
 
+	<!-- Selectpicker -->
+	<link rel="stylesheet" href="<?= base_url('assets/selectpicker/dist/css/bootstrap-select.min.css') ?>">
+
 	<!-- Style For This Dashboard -->
 	<link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
 

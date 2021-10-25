@@ -76,8 +76,7 @@
 						</div>
 						<div class="form-group">
 							<label for="id_company" class="font-weight-bolder">Perusahaan / <i>Company</i></label>
-							<select class="form-control form-control-sm" name="id_company" id="id_company" required>
-								<option value="" disabled selected>Pilih Perusahaan Pasien / Select Patient Company</option>
+							<select class="form-control form-control-sm selectpicker" data-live-search="true" title="Pilih Perusahaan Pasien / Select Patient Company" name="id_company" id="id_company" required>
 								<option value="0">Private</option>
 								<?php foreach ($companies as $company) : ?>
 									<option value="<?= $company->id ?>"><?= $company->name ?></option>

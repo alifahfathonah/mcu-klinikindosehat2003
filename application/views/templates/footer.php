@@ -24,6 +24,7 @@
 	<script src="<?= base_url('assets/bootstrap-4.6.0/js/bootstrap.bundle.min.js') ?>"></script>
 	<script src="<?= base_url('assets/datatables/datatables.min.js') ?>"></script>
 	<script src="<?= base_url('assets/datatables/bootstrap4/js/dataTables.bootstrap4.min.js') ?>"></script>
+	<script src="<?= base_url('assets/selectpicker/dist/js/bootstrap-select.min.js') ?>"></script>
 	<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
 	<script>
 		(function() {
