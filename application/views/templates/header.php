@@ -31,6 +31,9 @@
 	<script src="<?= base_url('assets/datetimepicker/jquery.js') ?>"></script>
 	<script src="<?= base_url('assets/datetimepicker/build/jquery.datetimepicker.full.min.js') ?>"></script>
 
+	<!-- Daterangepicker -->
+	<link rel="stylesheet" href="<?= base_url('assets/daterangepicker/daterangepicker.css') ?>">
+
 	<!-- Sweetalert -->
 	<script src="<?= base_url('assets/sweetalert/dist/sweetalert2.all.min.js') ?>"></script>
 

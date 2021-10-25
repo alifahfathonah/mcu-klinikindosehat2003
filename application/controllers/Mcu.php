@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
+
 class Mcu extends CI_Controller
 {
 
@@ -131,7 +135,8 @@ class Mcu extends CI_Controller
 			redirect('auth');
 		} else {
 			$data = [
-				'title' => 'MCU'
+				'title'   => 'MCU',
+				'clinics' => $this->clinic->get_list_of_clinic()
 			];
 
 			$this->load->view('templates/header', $data);
@@ -967,6 +972,71 @@ class Mcu extends CI_Controller
 		];
 
 		$this->load->view('mcus/mcu_result_preview', $data);
+	}
+
+	public function downloadExcelReportMcu()
+	{
+		date_default_timezone_set("Asia/Jakarta");
+		
+		$id_clinic = $this->input->post('id_clinic');
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
+
+		$title = "MCU Report " . $this->clinic->get_name_clinic_by_id($id_clinic); 
+		$range_top_date = 'From : ' . date('d F Y', strtotime($start_date)) . ' To : ' . date('d F Y', strtotime($end_date));
+		$total_data = $this->mcu->get_count_mcu_by_range_date_and_id_clinic($id_clinic, $start_date, $end_date);
+		$data = $this->mcu->get_data_mcu_by_range_date_and_id_clinic($id_clinic, $start_date, $end_date);
+
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+
+		$sheet->getColumnDimension('A')->setAutoSize(true);
+		$sheet->getColumnDimension('B')->setAutoSize(true);
+		$sheet->getColumnDimension('C')->setAutoSize(true);
+		$sheet->getColumnDimension('D')->setAutoSize(true);
+
+		$sheet->mergeCells('A1:D1');
+		$sheet->setCellValue('A1', $title);
+		$sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+		$sheet->getStyle('A1')->getFont()->setBold('1');
+		$sheet->getStyle('A1')->getFont()->setSize('16');
+
+		$sheet->mergeCells('A2:D2');
+		$sheet->setCellValue('A2', $range_top_date);
+		$sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
+
+
+		$sheet->setCellValue('C4', 'Total MCU Test');
+		$sheet->setCellValue('D4', $total_data);
+		$sheet->getStyle('C4')->getFont()->setBold('1');
+		$sheet->getStyle('D4')->getAlignment()->setHorizontal('left');
+
+		$sheet->setCellValue('A6', 'No.');
+		$sheet->setCellValue('B6', 'Medical Number Record');
+		$sheet->setCellValue('C6', 'Name Patient');
+		$sheet->setCellValue('D6', 'Examination Date');
+		$sheet->getStyle('A6')->getFont()->setBold('1');
+		$sheet->getStyle('B6')->getFont()->setBold('1');
+		$sheet->getStyle('C6')->getFont()->setBold('1');
+		$sheet->getStyle('D6')->getFont()->setBold('1');
+
+		$column = 7;
+		foreach($data as $index=>$d) {
+			$spreadsheet->setActiveSheetIndex(0)
+						->setCellValue('A' . $column, $index+1)
+						->setCellValue('B' . $column, $d['medical_record_number'])
+						->setCellValue('C' . $column, $d['name_patient'])
+						->setCellValue('D' . $column, date('d F Y', strtotime($d['date_examination'])));
+			$column++;
+		}
+
+		$writer = new Xlsx($spreadsheet);
+
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="MCU Report - ' . date("d F Y [") . time() . "]" . '.xlsx"');
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
 	}
 
 }
