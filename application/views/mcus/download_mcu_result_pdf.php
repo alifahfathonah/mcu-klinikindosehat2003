@@ -94,7 +94,23 @@
 	<table width="100%">
 		<tr>
 			<td>
-				<br><br><b>Benar telah melakukan Medical Check-Up di Indosehat 2003 Medical Centre.</b><br><i>Have trully complete Medical Standart Check-Up in Indosehat 2003 Medical Centre.</i><br><br>
+				<br><br><b>Benar telah melakukan Medical Check-Up di 
+					<?php if ($data['id_clinic'] == 2) : ?>
+						RAHB Indosehat 2003 Medical Centre.
+					<?php elseif ($data['id_clinic'] == 4) : ?>
+						Klinik Utama Hasela Medical Center.
+					<?php else : ?>
+						Indosehat 2003 Medical Centre.
+					<?php endif ?>
+				</b><br><i>Have trully complete Medical Standart Check-Up in 
+					<?php if ($data['id_clinic'] == 2) : ?>
+						RAHB Indosehat 2003 Medical Centre.
+					<?php elseif ($data['id_clinic'] == 4) : ?>
+						Klinik Utama Hasela Medical Center.
+					<?php else : ?>
+						Indosehat 2003 Medical Centre.
+					<?php endif ?>
+				</i><br><br>
 			</td>
 		</tr>
 	</table>
