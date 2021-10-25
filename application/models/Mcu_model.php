@@ -227,4 +227,26 @@ class Mcu_model extends CI_Model {
 		
 	}
 
+	// Excel Export
+
+	function get_count_mcu_by_range_date_and_id_clinic($id_clinic, $start, $end)
+	{
+		$this->db->select('*');
+		$this->db->from('mcus_v1');
+		$this->db->where('date_examination BETWEEN "' . $start . '" AND "' . $end . '"');
+		$this->db->where('id_clinic', $id_clinic);
+		
+		return $this->db->get()->num_rows();
+	}
+
+	function get_data_mcu_by_range_date_and_id_clinic($id_clinic, $start, $end)
+	{
+		$this->db->select('*');
+		$this->db->from('mcus_v1');
+		$this->db->where('date_examination BETWEEN "' . $start . '" AND "' . $end . '"');
+		$this->db->where('id_clinic', $id_clinic);
+		
+		return $this->db->get()->result_array();
+	}
+
 }

@@ -108,4 +108,11 @@ class Clinic_model extends CI_Model
 	{
 		return $this->db->get_where('doctors', ['id_clinic' => $id, 'is_deleted' => 0])->result_array();
 	}
+
+	function get_name_clinic_by_id($id)
+	{
+		$result = $this->db->get_where('clinics', ['id' => $id])->row_array();
+
+		return $result['name'];
+	}
 }
