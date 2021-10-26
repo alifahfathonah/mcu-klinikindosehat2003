@@ -73,7 +73,15 @@
 	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 		<header class="masthead mb-auto">
 			<div class="inner p-4 mt-n4">
-				<img class="img-fluid" src="<?= base_url('assets/images/logo/indosehat2003.png') ?>" alt="">
+				<?php if ($data['id_clinic'] == 2) : ?>
+					<img class="img-fluid" src="<?= base_url('assets/images/logo/indosehat2003-semarang.png') ?>" alt="Klinik Indosehat 2003 Semarang">
+				<?php elseif ($data['id_clinic'] == 3) :?>
+					<img class="img-fluid" src="<?= base_url('assets/images/logo/indosehat2003-surabaya.png') ?>" alt="Klinik Indosehat 2003 Surabaya">
+				<?php elseif ($data['id_clinic'] == 4) :?>
+					<img class="img-fluid" src="<?= base_url('assets/images/logo/indosehat2003-tegal.png') ?>" alt="Klinik Indosehat 2003 Tegal">
+				<?php else :?>
+					<img class="img-fluid" src="<?= base_url('assets/images/logo/indosehat2003.png') ?>" alt="Klinik Indosehat 2003">
+				<?php endif ?>
 			</div>
 		</header>
 
