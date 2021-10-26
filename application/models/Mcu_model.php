@@ -241,10 +241,12 @@ class Mcu_model extends CI_Model {
 
 	function get_data_mcu_by_range_date_and_id_clinic($id_clinic, $start, $end)
 	{
-		$this->db->select('*');
+		$this->db->select('mcus_v1.id as id, mcus_v1.medical_record_number as medical_record_number, mcu_manual, mcus_v1.id_clinic as id_clinic, name_patient, companies.name as company_name, type_transaction, total_price, date_examination');
 		$this->db->from('mcus_v1');
+		$this->db->join('transactions', 'transactions.medical_record_number=mcus_v1.medical_record_number', 'left');
+		$this->db->join('companies', 'companies.id=transactions.id_company', 'left');
 		$this->db->where('date_examination BETWEEN "' . $start . '" AND "' . $end . '"');
-		$this->db->where('id_clinic', $id_clinic);
+		$this->db->where('mcus_v1.id_clinic', $id_clinic);
 		
 		return $this->db->get()->result_array();
 	}
