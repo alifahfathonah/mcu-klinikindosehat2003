@@ -994,31 +994,47 @@ class Mcu extends CI_Controller
 		$sheet->getColumnDimension('B')->setAutoSize(true);
 		$sheet->getColumnDimension('C')->setAutoSize(true);
 		$sheet->getColumnDimension('D')->setAutoSize(true);
+		$sheet->getColumnDimension('E')->setAutoSize(true);
+		$sheet->getColumnDimension('F')->setAutoSize(true);
+		$sheet->getColumnDimension('G')->setAutoSize(true);
 
-		$sheet->mergeCells('A1:D1');
+		$sheet->mergeCells('A1:G1');
 		$sheet->setCellValue('A1', $title);
 		$sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
 		$sheet->getStyle('A1')->getFont()->setBold('1');
 		$sheet->getStyle('A1')->getFont()->setSize('16');
 
-		$sheet->mergeCells('A2:D2');
+		$sheet->mergeCells('A2:G2');
 		$sheet->setCellValue('A2', $range_top_date);
 		$sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
 
 
-		$sheet->setCellValue('C4', 'Total MCU Test');
-		$sheet->setCellValue('D4', $total_data);
-		$sheet->getStyle('C4')->getFont()->setBold('1');
-		$sheet->getStyle('D4')->getAlignment()->setHorizontal('left');
+		$sheet->setCellValue('F4', 'Total MCU Test');
+		$sheet->setCellValue('G4', $total_data);
+		$sheet->getStyle('F4')->getFont()->setBold('1');
+		$sheet->getStyle('G4')->getAlignment()->setHorizontal('left');
 
 		$sheet->setCellValue('A6', 'No.');
 		$sheet->setCellValue('B6', 'Medical Number Record');
 		$sheet->setCellValue('C6', 'Name Patient');
 		$sheet->setCellValue('D6', 'Examination Date');
+		$sheet->setCellValue('E6', 'Company');
+		$sheet->setCellValue('F6', 'Type Transaction');
+		$sheet->setCellValue('G6', 'Total Price');
 		$sheet->getStyle('A6')->getFont()->setBold('1');
+		$sheet->getStyle('A6')->getAlignment()->setHorizontal('center');
 		$sheet->getStyle('B6')->getFont()->setBold('1');
+		$sheet->getStyle('B6')->getAlignment()->setHorizontal('center');
 		$sheet->getStyle('C6')->getFont()->setBold('1');
+		$sheet->getStyle('C6')->getAlignment()->setHorizontal('center');
 		$sheet->getStyle('D6')->getFont()->setBold('1');
+		$sheet->getStyle('D6')->getAlignment()->setHorizontal('center');
+		$sheet->getStyle('E6')->getFont()->setBold('1');
+		$sheet->getStyle('E6')->getAlignment()->setHorizontal('center');
+		$sheet->getStyle('F6')->getFont()->setBold('1');
+		$sheet->getStyle('F6')->getAlignment()->setHorizontal('center');
+		$sheet->getStyle('G6')->getFont()->setBold('1');
+		$sheet->getStyle('G6')->getAlignment()->setHorizontal('center');
 
 		$column = 7;
 		foreach($data as $index=>$d) {
@@ -1026,7 +1042,11 @@ class Mcu extends CI_Controller
 						->setCellValue('A' . $column, $index+1)
 						->setCellValue('B' . $column, $d['mcu_manual'])
 						->setCellValue('C' . $column, $d['name_patient'])
-						->setCellValue('D' . $column, date('d F Y', strtotime($d['date_examination'])));
+						->setCellValue('D' . $column, date('d F Y', strtotime($d['date_examination'])))
+						->setCellValue('E' . $column, $d['company_name'])
+						->setCellValue('F' . $column, strtoupper($d['type_transaction']))
+						->setCellValue('G' . $column, number_format($d['total_price']))
+						->getStyle('G')->getAlignment()->setHorizontal('right');
 			$column++;
 		}
 
