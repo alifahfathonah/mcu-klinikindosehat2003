@@ -147,17 +147,17 @@
 						<p><b>dr. Said Husain<b></p>
 						<p><i>Examination</i></p>
 					<?php elseif ($data['id_clinic'] == 2) : ?>
-						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
+						<p>Semarang, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 						<br><br><br><br><br><br>
 						<p><b>dr. Abdul Hr Korompot, MARS<b></p>
 						<p><i>Examination</i></p>
 					<?php elseif ($data['id_clinic'] == 3) : ?>
-						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
+						<p>Surabaya, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 						<br><br><br><br><br><br>
 						<p><b>dr. Abdul Arif Irsan<b></p>
 						<p><i>Examination</i></p>
 					<?php elseif ($data['id_clinic'] == 4) : ?>
-						<p>Jakarta, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
+						<p>Tegal, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 						<br><br><br><br><br><br>
 						<p><b>dr. Rudolf Fernando Wibowo<b></p>
 						<p><i>Examination</i></p>
