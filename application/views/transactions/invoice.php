@@ -45,7 +45,17 @@
 	</style>
 </head>
 
-<body style='background-image: url("<?= base_url('assets/images/pdftemplate/kop-cilincing.png') ?>"); background-position: top left; background-repeat: no-repeat; background-image-resize: 4; background-image-resolution: from-image;'>
+<?php if ($data['id_clinic'] == 1) : ?>
+	<body style='background-image: url("<?= base_url('assets/images/pdftemplate/kop-cilincing.png') ?>"); background-position: top left; background-repeat: no-repeat; background-image-resize: 4; background-image-resolution: from-image;'>
+<?php elseif ($data['id_clinic'] == 2) : ?>
+	<body style='background-image: url("<?= base_url('assets/images/pdftemplate/kop-semarang.png') ?>"); background-position: top left; background-repeat: no-repeat; background-image-resize: 4; background-image-resolution: from-image;'>
+<?php elseif ($data['id_clinic'] == 3) : ?>
+	<body style='background-image: url("<?= base_url('assets/images/pdftemplate/kop-surabaya.png') ?>"); background-position: top left; background-repeat: no-repeat; background-image-resize: 4; background-image-resolution: from-image;'>
+<?php elseif ($data['id_clinic'] == 4) : ?>
+	<body style='background-image: url("<?= base_url('assets/images/pdftemplate/kop-tegal.png') ?>"); background-position: top left; background-repeat: no-repeat; background-image-resize: 4; background-image-resolution: from-image;'>
+<?php elseif ($data['id_clinic'] == 5) : ?>
+	<body style='background-image: url("<?= base_url('assets/images/pdftemplate/kop-warakas.png') ?>"); background-position: top left; background-repeat: no-repeat; background-image-resize: 4; background-image-resolution: from-image;'>
+<?php endif ?>
 	<div class="container">
 		<div class="content title">
 			<p>INVOICE</p>

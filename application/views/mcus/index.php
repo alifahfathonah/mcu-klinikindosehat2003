@@ -3,7 +3,7 @@
 				<div class="flex-grow-1">
 					<h1 class="h3 font-weight-bolder"><i>Laboratory Result</i></h1>
 				</div>
-				<?php if ($this->session->userdata('role') == 'superuser') : ?>
+				<?php if ($this->session->userdata('role') == 'superuser') || $this->session->userdata('role') == 'admin') : ?>
 					<div>
 						<form class="d-flex" action="<?= base_url('mcu/downloadExcelReportMcu') ?>" method="POST">
 							<div id="input-filters-date">
