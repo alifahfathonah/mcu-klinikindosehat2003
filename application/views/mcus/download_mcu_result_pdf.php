@@ -201,7 +201,7 @@
 				<td align="center">
 					<p style="font-size: 16px;">Tegal, <?= date('d F Y', strtotime($data["date_examination"])) ?></p>
 					<br>
-					<img src="<?= base_url("assets/images/pdftemplate/dic.png") ?>" width="400px" style="margin-top: -25px; margin-bottom: -35px;">
+					<img src="<?= base_url("assets/images/pdftemplate/dic-rudolf-tegal.png") ?>" width="400px" style="margin-top: -25px; margin-bottom: -35px;">
 					<p style="font-size: 16px;"><b>dr. Rudolf Fernando Wibowo<b></p>
 					<p style="font-size: 16px;"><i>Examination</i></p>
 				</td>
