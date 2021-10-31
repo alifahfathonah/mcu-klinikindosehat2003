@@ -76,6 +76,11 @@ class Transaction_model extends CI_Model
 
 	// End Datatables
 
+	function get_all_data_transactions()
+	{
+		return $this->db->get('transactions')->result_array();
+	}
+
 	function get_data_transaction($no_transaction)
 	{
 		$this->db->select('transactions.id as id, no_transaction, id_clinic, medical_record_number, patient_name, patients.address as patient_address, type_transaction, type_examination, total_price, transactions.created_at as date');
@@ -84,6 +89,14 @@ class Transaction_model extends CI_Model
 		$this->db->where('transactions.no_transaction', $no_transaction);
 
 		return $this->db->get()->row_array();
+	}
+
+	function update_table_transactions($id, $data)
+	{
+		$this->db->where('id', $id);
+		$this->db->update('transactions', $data);
+
+		return TRUE;
 	}
 
 }
