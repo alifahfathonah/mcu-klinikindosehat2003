@@ -33,9 +33,17 @@ class Transaction extends CI_Controller
 			$row[] = number_format($item->total_price, 0, '.', '.');
 
 			// Action Button
-			$row[] = '
-				<a class="button-primary" href="' . base_url('transaction/previewInvoicePdf/' . $item->no_transaction) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
-			';
+			if ($this->session->userdata('role') == 'superuser') {
+				$row[] = '
+					<a class="button-warning" href="#" data-toggle="modal" data-target="#editTransaction' . $item->id . '"><i class="fas fa-fw fa-edit"></i> Ubah / <i>Edit</i></a>
+					<a class="button-primary" href="' . base_url('transaction/previewInvoicePdf/' . $item->no_transaction) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
+				';
+			} else {
+				$row[] = '
+					<a class="button-primary" href="' . base_url('transaction/previewInvoicePdf/' . $item->no_transaction) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
+				';
+			};
+			
 
 			$data[] = $row;
 		}
@@ -57,7 +65,8 @@ class Transaction extends CI_Controller
 	public function index()
 	{
 		$data = [
-			'title'   => 'Transaction'
+			'title'  	   => 'Transaction',
+			'transactions' => $this->transaction->get_all_data_transactions()
 		];
 
 		$this->load->view('templates/header', $data);
@@ -65,6 +74,19 @@ class Transaction extends CI_Controller
 		$this->load->view('templates/sidebar');
 		$this->load->view('transactions/index');
 		$this->load->view('templates/footer');
+	}
+
+	public function editTransaction()
+	{
+		$data = [
+			'total_price' => $this->input->post('total_price')
+		];
+
+		$this->transaction->update_table_transactions($this->input->post('id'), $data);
+
+		$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'Data Transaction has been updated!',showConfirmButton: false,timer: 1500})</script>");
+
+		redirect('transaction');
 	}
 
 	public function previewInvoicePdf($no_transaction)
