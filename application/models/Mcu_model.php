@@ -32,9 +32,9 @@ class Mcu_model extends CI_Model {
 			$start = date('Y-m-01');
 			$end = date('Y-m-d');
 
-			$this->db->where('created_at BETWEEN "' . $start . '" AND "' . $end . '"');
+			$this->db->where('created_at BETWEEN "' . date('Y-m-d', strtotime('-1 days', strtotime($start))) . '" AND "' . date('Y-m-d', strtotime('+1 days', strtotime($end))) . '"');
 		} else {
-			$this->db->where('created_at BETWEEN "' . $start . '" AND "' . $end . '"');
+			$this->db->where('created_at BETWEEN "' . date('Y-m-d', strtotime('-1 days', strtotime($start))) . '" AND "' . date('Y-m-d', strtotime('+1 days', strtotime($end))) . '"');
 		}
 
 		if ($status == 1) {
@@ -73,9 +73,9 @@ class Mcu_model extends CI_Model {
 			$start = date('Y-m-01');
 			$end = date('Y-m-d');
 
-			$this->db->where('mcus_v1.created_at BETWEEN "' . $start . '" AND "' . $end . '"');
+			$this->db->where('mcus_v1.created_at BETWEEN "' . date('Y-m-d', strtotime('-1 days', strtotime($start))) . '" AND "' . date('Y-m-d', strtotime('+1 days', strtotime($end))) . '"');
 		} else {
-			$this->db->where('mcus_v1.created_at BETWEEN "' . $start . '" AND "' . $end . '"');
+			$this->db->where('mcus_v1.created_at BETWEEN "' . date('Y-m-d', strtotime('-1 days', strtotime($start))) . '" AND "' . date('Y-m-d', strtotime('+1 days', strtotime($end))) . '"');
 		}
 
 		if ($status == 1) {
