@@ -168,7 +168,7 @@
 				</div>
 				<div class="col-md-2 text-center" style="background-color: #f4f6fa; margin-left: -15px; padding: 10px;">
 					<div id="my_camera"></div>
-					<div class="text-center">
+					<div class="text-center mt-2">
 						<button class="btn btn-sm btn-info" value="Take Snapshot" onClick="take_snapshot()"><i class="fas fa-camera-retro"></i>&nbsp;Ambil Foto</button>
 					</div>
 					<div class="mt-3">
@@ -187,232 +187,228 @@
 
 <script type="text/javascript" src="<?= base_url('assets/webcam/webcam.min.js') ?>"></script>
 <script>
-	$(function() {
+	jQuery('#date_of_birth').datetimepicker({
+		timepicker: false,
+		format: 'Y-m-d'
+	});
 
-		jQuery('#date_of_birth').datetimepicker({
-			timepicker: false,
-			format: 'Y-m-d'
-		});
+	jQuery('#date_examination').datetimepicker({
+		timepicker: false,
+		format: 'Y-m-d'
+	});
 
-		jQuery('#date_examination').datetimepicker({
-			timepicker: false,
-			format: 'Y-m-d'
-		});
+	function myFunction1() {
+		document.getElementById("nationality").setAttribute("readonly", "");
+		document.getElementById("nationality").value = 'Indonesia';
+	}
 
-		function myFunction1() {
-			document.getElementById("nationality").setAttribute("readonly", "");
-			document.getElementById("nationality").value = 'Indonesia';
+	function myFunction2() {
+		document.getElementById("nationality").removeAttribute("readonly", "");
+		document.getElementById("nationality").value = '';
+	}
+
+	function myFunction4() {
+		document.getElementById("company").removeAttribute("readonly", "");
+		document.getElementById("company").value = '';
+	}
+
+	function myFunction5() {
+		document.getElementById("basic_safety_training").setAttribute("readonly", "");
+		document.getElementById("basic_safety_training").value = 'Private';
+	}
+
+	function myFunction6() {
+		document.getElementById("basic_safety_training").removeAttribute("readonly", "");
+		document.getElementById("basic_safety_training").value = '';
+	}
+
+	function myFunction7() {
+		document.getElementById("occupation").setAttribute("readonly", "");
+		document.getElementById("occupation").value = 'Private';
+	}
+
+	function myFunction8() {
+		document.getElementById("occupation").removeAttribute("readonly", "");
+		document.getElementById("occupation").value = '';
+	}
+
+	$('#id_company').on('change', function() {
+		if (this.value > 0) {
+			$('<option/>').val('company').text('TAGIHAN / INVOICE').appendTo('#type_transaction')
+		} else {
+			$("#type_transaction option[value='company']").remove();
+			$("#total_price").attr("value", "");
+			$("#total_price").prop("readonly", false);
+		}
+	});
+
+	$('#type_transaction').on('change', function() {
+		if (this.value == 'company') {
+			$("#total_price").attr("value", 0);
+			$("#total_price").prop("readonly", true);
+		} else {
+			$("#total_price").attr("value", "");
+			$("#total_price").prop("readonly", false);
+		}
+	});
+
+	var jml_uang = document.getElementById('total_price');
+	
+	jml_uang.addEventListener('keyup', function(e) {
+		jml_uang.value = formatRupiah(this.value, '');
+	});
+
+	function formatRupiah(angka, prefix) {
+		var number_string = angka.replace(/[^,\d]/g, '').toString(),
+			split = number_string.split(','),
+			sisa = split[0].length % 3,
+			rupiah = split[0].substr(0, sisa),
+			ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+		if (ribuan) {
+			separator = sisa ? '.' : '';
+			rupiah += separator + ribuan.join('.');
 		}
 
-		function myFunction2() {
-			document.getElementById("nationality").removeAttribute("readonly", "");
-			document.getElementById("nationality").value = '';
-		}
+		rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+		return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
+	}
 
-		function myFunction4() {
-			document.getElementById("company").removeAttribute("readonly", "");
-			document.getElementById("company").value = '';
-		}
+	$('#id_number_checking').on('submit', function (event) {
+		event.preventDefault();
+		var id_number = $('#id_number_for_checking').val();
 
-		function myFunction5() {
-			document.getElementById("basic_safety_training").setAttribute("readonly", "");
-			document.getElementById("basic_safety_training").value = 'Private';
-		}
+		$.ajax({
+			url: '<?= base_url("patient/checkingIdNumber") ?>',
+			type: 'POST',
+			dataType: 'json',
+			data: {id_number:id_number},
+		})
+		.done(function(data) {
+			let patient = data[0];
+			$("#id_number_old").attr("value", patient.id_number);
+			$("#id_number").attr("value", patient.id_number);
+			$("#passport_number").attr("value", patient.passport_number);
+			$("#name").attr("value", patient.name);
+			$('#gender').val(patient.gender).change();
+			$("#place_of_birth").attr("value", patient.place_of_birth);
+			$("#date_of_birth").attr("value", patient.date_of_birth);
+			$("#address").val(patient.address);
+			$("#basic_safety_training").attr("value", patient.basic_safety_training);
+			$("#nationality").attr("value", patient.nationality);
+			$('#id_company').val(patient.id_company).change();
+			$("#occupation").attr("value", patient.occupation);
 
-		function myFunction6() {
-			document.getElementById("basic_safety_training").removeAttribute("readonly", "");
-			document.getElementById("basic_safety_training").value = '';
-		}
-
-		function myFunction7() {
-			document.getElementById("occupation").setAttribute("readonly", "");
-			document.getElementById("occupation").value = 'Private';
-		}
-
-		function myFunction8() {
-			document.getElementById("occupation").removeAttribute("readonly", "");
-			document.getElementById("occupation").value = '';
-		}
-
-		$('#id_company').on('change', function() {
-			if (this.value > 0) {
-				$('<option/>').val('company').text('TAGIHAN / INVOICE').appendTo('#type_transaction')
-			} else {
-				$("#type_transaction option[value='company']").remove();
-				$("#total_price").attr("value", "");
-				$("#total_price").prop("readonly", false);
+			if (patient.basic_safety_training == "Private") {
+				$("#bst").attr("checked", true);
 			}
-		});
 
-		$('#type_transaction').on('change', function() {
-			if (this.value == 'company') {
-				$("#total_price").attr("value", 0);
-				$("#total_price").prop("readonly", true);
-			} else {
-				$("#total_price").attr("value", "");
-				$("#total_price").prop("readonly", false);
-			}
-		});
-
-		var jml_uang = document.getElementById('total_price');
-		
-		jml_uang.addEventListener('keyup', function(e) {
-			jml_uang.value = formatRupiah(this.value, '');
-		});
-
-		function formatRupiah(angka, prefix) {
-			var number_string = angka.replace(/[^,\d]/g, '').toString(),
-				split = number_string.split(','),
-				sisa = split[0].length % 3,
-				rupiah = split[0].substr(0, sisa),
-				ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-			if (ribuan) {
-				separator = sisa ? '.' : '';
-				rupiah += separator + ribuan.join('.');
+			if (patient.nationality == "INDONESIA") {
+				$("#indonesia").attr("checked", true);
 			}
 
-			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-			return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
-		}
+			if (patient.occupation == "PRIVATE") {
+				$("#occu").attr("checked", true);
+			}
 
-		$('#id_number_checking').on('submit', function (event) {
-			event.preventDefault();
-			var id_number = $('#id_number_for_checking').val();
+			if (patient.address != "") {
+				$("#address-display").css("display", "");
+			}
 
-			$.ajax({
-				url: '<?= base_url("patient/checkingIdNumber") ?>',
+			if (patient.address == null) {
+				$("#address-display").css("display", "none");
+			}
+		})
+	});
+
+	// Photo Snapshot
+	Webcam.set({
+		width: 320,
+		height: 240,
+		crop_width: 180,
+		crop_height: 240,
+		image_format: 'jpeg',
+		jpeg_quality: 100
+	});
+
+	Webcam.attach('#my_camera');
+
+	function take_snapshot() {
+		Webcam.snap(function(data_uri) {
+			document.getElementById('results').innerHTML = '<img id="imageprev" src="' + data_uri + '"/>';
+		});
+	};
+
+	$('#registration_patient_process').on('submit', function(event) {
+		event.preventDefault();
+		var id_number_old = $('#id_number_old').val();
+		var id_number = $('#id_number').val();
+		var passport_number = $('#passport_number').val();
+		var name = $('#name').val();
+		var gender = $('#gender').val();
+		var place_of_birth = $('#place_of_birth').val();
+		var date_of_birth = $('#date_of_birth').val();
+		var address = $('#address').val();
+		var basic_safety_training = $('#basic_safety_training').val();
+		var nationality = $('#nationality').val();
+		var id_company = $('#id_company').val();
+		var occupation = $('#occupation').val();
+		var id_clinic = $('#id_clinic').val();
+		var type_examination = $('#type_examination').val();
+		var mcu_manual = $('#mcu_manual').val();
+		var date_examination = $('#date_examination').val();
+		var type_transaction = $('#type_transaction').val();
+		var total_price = $('#total_price').val();
+
+		var image = document.getElementById("imageprev").src;
+
+		$.ajax({
+				url: '<?= base_url("patient/registrationPatientProcess"); ?>',
 				type: 'POST',
 				dataType: 'json',
-				data: {id_number:id_number},
+				data: {
+					id_number_old: id_number_old,
+					id_number: id_number,
+					passport_number: passport_number,
+					name: name,
+					gender: gender,
+					place_of_birth: place_of_birth,
+					date_of_birth: date_of_birth,
+					address: address,
+					basic_safety_training: basic_safety_training,
+					nationality: nationality,
+					id_company: id_company,
+					occupation: occupation,
+					id_clinic: id_clinic,
+					type_examination: type_examination,
+					mcu_manual: mcu_manual,
+					date_examination: date_examination,
+					type_transaction: type_transaction,
+					total_price: total_price,
+					image: image
+				},
 			})
 			.done(function(data) {
-				let patient = data[0];
-				$("#id_number_old").attr("value", patient.id_number);
-				$("#id_number").attr("value", patient.id_number);
-				$("#passport_number").attr("value", patient.passport_number);
-				$("#name").attr("value", patient.name);
-				$('#gender').val(patient.gender).change();
-				$("#place_of_birth").attr("value", patient.place_of_birth);
-				$("#date_of_birth").attr("value", patient.date_of_birth);
-				$("#address").val(patient.address);
-				$("#basic_safety_training").attr("value", patient.basic_safety_training);
-				$("#nationality").attr("value", patient.nationality);
-				$('#id_company').val(patient.id_company).change();
-				$("#occupation").attr("value", patient.occupation);
-
-				if (patient.basic_safety_training == "Private") {
-					$("#bst").attr("checked", true);
-				}
-
-				if (patient.nationality == "INDONESIA") {
-					$("#indonesia").attr("checked", true);
-				}
-
-				if (patient.occupation == "PRIVATE") {
-					$("#occu").attr("checked", true);
-				}
-
-				if (patient.address != "") {
-					$("#address-display").css("display", "");
-				}
-
-				if (patient.address == null) {
-					$("#address-display").css("display", "none");
+				if (data > 0) {
+					Swal.fire({
+						title: 'Success',
+						icon: 'success',
+						showCancelButton: false,
+						confirmButtonColor: '#3085d6',
+						confirmButtonText: 'OK'
+					}).then((result) => {
+						if (result.value) {
+							window.location = "<?= base_url('patient') ?>"
+							$('#add_patient_process')[0].reset();
+						}
+					})
 				}
 			})
-		});
-
-		// Photo Snapshot
-		Webcam.set({
-			width: 320,
-			height: 240,
-			crop_width: 180,
-			crop_height: 240,
-			image_format: 'jpeg',
-			jpeg_quality: 100
-		});
-
-		Webcam.attach('#my_camera');
-
-		function take_snapshot() {
-			Webcam.snap(function(data_uri) {
-				document.getElementById('results').innerHTML = '<img id="imageprev" src="' + data_uri + '"/>';
+			.fail(function() {
+				console.log("error");
+			})
+			.always(function() {
+				console.log("complete");
 			});
-		};
-
-		$('#registration_patient_process').on('submit', function(event) {
-			event.preventDefault();
-			var id_number_old = $('#id_number_old').val();
-			var id_number = $('#id_number').val();
-			var passport_number = $('#passport_number').val();
-			var name = $('#name').val();
-			var gender = $('#gender').val();
-			var place_of_birth = $('#place_of_birth').val();
-			var date_of_birth = $('#date_of_birth').val();
-			var address = $('#address').val();
-			var basic_safety_training = $('#basic_safety_training').val();
-			var nationality = $('#nationality').val();
-			var id_company = $('#id_company').val();
-			var occupation = $('#occupation').val();
-			var id_clinic = $('#id_clinic').val();
-			var type_examination = $('#type_examination').val();
-			var mcu_manual = $('#mcu_manual').val();
-			var date_examination = $('#date_examination').val();
-			var type_transaction = $('#type_transaction').val();
-			var total_price = $('#total_price').val();
-
-			var image = document.getElementById("imageprev").src;
-
-			$.ajax({
-					url: '<?= base_url("patient/registrationPatientProcess"); ?>',
-					type: 'POST',
-					dataType: 'json',
-					data: {
-						id_number_old: id_number_old,
-						id_number: id_number,
-						passport_number: passport_number,
-						name: name,
-						gender: gender,
-						place_of_birth: place_of_birth,
-						date_of_birth: date_of_birth,
-						address: address,
-						basic_safety_training: basic_safety_training,
-						nationality: nationality,
-						id_company: id_company,
-						occupation: occupation,
-						id_clinic: id_clinic,
-						type_examination: type_examination,
-						mcu_manual: mcu_manual,
-						date_examination: date_examination,
-						type_transaction: type_transaction,
-						total_price: total_price,
-						image: image
-					},
-				})
-				.done(function(data) {
-					if (data > 0) {
-						Swal.fire({
-							title: 'Success',
-							icon: 'success',
-							showCancelButton: false,
-							confirmButtonColor: '#3085d6',
-							confirmButtonText: 'OK'
-						}).then((result) => {
-							if (result.value) {
-								window.location = "<?= base_url('patient') ?>"
-								$('#add_patient_process')[0].reset();
-							}
-						})
-					}
-				})
-				.fail(function() {
-					console.log("error");
-				})
-				.always(function() {
-					console.log("complete");
-				});
-		});
-
 	});
 </script>
