@@ -4,49 +4,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Clinic extends CI_Controller
 {
 
+	/**
+	 * Constructor for this controller.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
+		
+		date_default_timezone_set("Asia/Jakarta");
+
 		$this->load->model('clinic_model', 'clinic');
+
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		}
-		$this->session->unset_userdata('keyword');
-	}
 
-	/** 
-	 * Serverside Datatables for this controller
-	 */
-	function get_ajax_clinic()
-	{
-		$list = $this->clinic->get_datatables_clinic();
-		$data = [];
-		$no   = @$_POST['start'];
-		foreach ($list as $item) {
-			$no++;
-			$row   = [];
-			$row[] = $no . ".";
-			$row[] = $item->name;
-			$row[] = $item->address;
-
-			// Action Button
-			$row[] = '
-				<a class="button-warning" href="#" data-toggle="modal" data-target="#editClinic' . $item->id . '"><i class="fas fa-fw fa-user-edit"></i> Ubah / <i>Edit</i></a>
-				<a class="button-danger" href="#" data-toggle="modal" data-target="#deleteClinic' . $item->id . '"><i class="fas fa-fw fa-user-minus"></i> Hapus / <i>Delete</i></a>
-			';
-
-			$data[] = $row;
-		}
-
-		$output = [
-			"draw"            => @$_POST['draw'],
-			"recordsTotal"    => $this->clinic->count_all(),
-			"recordsFiltered" => $this->clinic->count_filtered(),
-			"data"            => $data
-		];
-
-		// Output to JSON Format
-		echo json_encode($output);
+		$this->session->unset_userdata('filterByDataCompany');
+		$this->session->unset_userdata('filterByDataPatient');
+		$this->session->unset_userdata('filterByCompany');
+		$this->session->unset_userdata('filterByDataPatientCheck');
+		$this->session->unset_userdata('filterByDataTransaction');
+		$this->session->unset_userdata('filterByType');
+		$this->session->unset_userdata('filterBySiteTransaction');
+		$this->session->unset_userdata('filterByData');
+		$this->session->unset_userdata('filterByStatus');
+		$this->session->unset_userdata('filterByStartDate');
+		$this->session->unset_userdata('filterByEndDate');
+		$this->session->unset_userdata('filterBySite');
 	}
 
 	/**
@@ -55,20 +39,21 @@ class Clinic extends CI_Controller
 	public function index()
 	{
 		$data = [
-			'title'   => 'Clinics',
+			'title'   => 'Klinik',
 			'clinics' => $this->clinic->get_list_of_clinic()
 		];
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('templates/navbar');
-		$this->load->view('templates/sidebar');
 		$this->load->view('clinics/index');
 		$this->load->view('templates/footer');
 	}
 
+	/**
+	 * Add new clinic process.
+	 */
 	public function addNewClinic()
 	{
-		date_default_timezone_set("Asia/Jakarta");
 		$data = [
 			'name' 		 => $this->input->post('name'),
 			'address' 	 => $this->input->post('address'),
@@ -82,9 +67,11 @@ class Clinic extends CI_Controller
 		redirect('clinic');
 	}
 
+	/**
+	 * Edit data clinic process.
+	 */
 	public function editClinic()
 	{
-		date_default_timezone_set("Asia/Jakarta");
 		$data = [
 			'name' 		 => $this->input->post('name'),
 			'address' 	 => $this->input->post('address'),
@@ -98,6 +85,9 @@ class Clinic extends CI_Controller
 		redirect('clinic');
 	}
 
+	/**
+	 * Delete clinic process.
+	 */
 	public function deleteClinic()
 	{
 		$this->clinic->delete_clinic($this->input->post('id'));
@@ -107,8 +97,9 @@ class Clinic extends CI_Controller
 		redirect('clinic');
 	}
 
-	// 
-
+	/**
+	 * Return doctors by clinic.
+	 */
 	public function getDoctor($id_clinic)
 	{
 		$doctors = $this->clinic->get_doctor_by_id_clinic($id_clinic);

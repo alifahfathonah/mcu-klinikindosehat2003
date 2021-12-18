@@ -7,56 +7,23 @@ class Transaction extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		
 		$this->load->model('transaction_model', 'transaction');
+		$this->load->model('Clinic_model', 'clinic');
+
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		}
-		$this->session->unset_userdata('keyword');
-	}
-
-	/** 
-	 * Serverside Datatables for this controller
-	 */
-	function get_ajax_transaction()
-	{
-		$list = $this->transaction->get_datatables_transaction();
-		$data = [];
-		$no   = @$_POST['start'];
-		foreach ($list as $item) {
-			$no++;
-			$row   = [];
-			$row[] = $no . ".";
-			$row[] = $item->no_transaction;
-			$row[] = $item->medical_record_number;
-			$row[] = $item->patient_name;
-			$row[] = strtoupper($item->type_transaction);
-			$row[] = number_format($item->total_price, 0, '.', '.');
-
-			// Action Button
-			if ($this->session->userdata('role') == 'superuser') {
-				$row[] = '
-					<a class="button-warning" href="#" data-toggle="modal" data-target="#editTransaction' . $item->id . '"><i class="fas fa-fw fa-edit"></i> Ubah / <i>Edit</i></a>
-					<a class="button-primary" href="' . base_url('transaction/previewInvoicePdf/' . $item->no_transaction) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
-				';
-			} else {
-				$row[] = '
-					<a class="button-primary" href="' . base_url('transaction/previewInvoicePdf/' . $item->no_transaction) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
-				';
-			};
-			
-
-			$data[] = $row;
-		}
-
-		$output = [
-			"draw"            => @$_POST['draw'],
-			"recordsTotal"    => $this->transaction->count_all(),
-			"recordsFiltered" => $this->transaction->count_filtered(),
-			"data"            => $data
-		];
-
-		// Output to JSON Format
-		echo json_encode($output);
+		
+		$this->session->unset_userdata('filterByDataCompany');
+		$this->session->unset_userdata('filterByDataPatient');
+		$this->session->unset_userdata('filterByCompany');
+		$this->session->unset_userdata('filterByDataPatientCheck');
+		$this->session->unset_userdata('filterByData');
+		$this->session->unset_userdata('filterByStatus');
+		$this->session->unset_userdata('filterByStartDate');
+		$this->session->unset_userdata('filterByEndDate');
+		$this->session->unset_userdata('filterBySite');
 	}
 
 	/**
@@ -64,14 +31,68 @@ class Transaction extends CI_Controller
 	 */
 	public function index()
 	{
+		if ($this->input->post('filter')) {
+			$filterByDataTransaction = $this->input->post('filter-by-data');
+			$filterByType = $this->input->post('filter-by-status');
+			$filterBySiteTransaction = $this->input->post('filter-by-site');
+			
+			$this->session->set_userdata('filterByDataTransaction', $filterByDataTransaction);
+			$this->session->set_userdata('filterByType', $filterByType);
+			$this->session->set_userdata('filterBySiteTransaction', $filterBySiteTransaction);
+		} else {
+			$filterByDataTransaction = $this->session->userdata('filterByDataTransaction');
+			$filterByType = $this->session->userdata('filterByType');
+			$filterBySiteTransaction = $this->session->userdata('filterBySiteTransaction');
+		}
+
+		// Pagination 
+
+		$this->load->library('pagination');
+		
+		$config['base_url']   = base_url('transaction/index');
+		$config['total_rows'] = $this->transaction->get_total_data_transaction($filterByDataTransaction, $filterByType, $filterBySiteTransaction);
+		$config['per_page']   = 15;
+		
+		$config['full_tag_open'] = '<nav><ul class="pagination justify-content-end">';
+		$config['full_tag_close'] = '</ul></nav>';
+		
+		$config['first_link'] = 'First';
+		$config['first_tag_open'] = '<li class="page-item">';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_link'] = 'Last';
+		$config['last_tag_open'] = '<li class="page-item">';
+		$config['last_tag_close'] = '</li>';
+
+		$config['next_link'] = '&raquo';
+		$config['next_tag_open'] = '<li class="page-item">';
+		$config['next_tag_close'] = '</li>';
+
+		$config['prev_link'] = '&laquo';
+		$config['prev_tag_open'] = '<li class="page-item">';
+		$config['prev_tag_close'] = '</li>';
+
+		$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+
+		$config['num_tag_open'] = '<li class="page-item">';
+		$config['num_tag_close'] = '</li>';
+
+		$config['attributes'] = ['class' => 'page-link'];
+
+		$this->pagination->initialize($config);
+
+		$start_data = $this->uri->segment(3);
+
 		$data = [
-			'title'  	   => 'Transaction',
-			'transactions' => $this->transaction->get_all_data_transactions()
+			'title'   	   => 'Transaksi',
+			'clinics'      => $this->clinic->get_list_of_clinic(),
+			'total_data'   => $config['total_rows'],
+			'transactions' => $this->transaction->get_data_transactions($config['per_page'], $start_data, $filterByDataTransaction, $filterByType, $filterBySiteTransaction)
 		];
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('templates/navbar');
-		$this->load->view('templates/sidebar');
 		$this->load->view('transactions/index');
 		$this->load->view('templates/footer');
 	}

@@ -7,13 +7,27 @@ class Patient extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+
+		date_default_timezone_set("Asia/Jakarta");
+
 		$this->load->model('patient_model', 'patient');
 		$this->load->model('company_model', 'company');
 		$this->load->model('clinic_model', 'clinic');
 		$this->load->model('mcu_model', 'mcu');
+		
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		}
+
+		$this->session->unset_userdata('filterByDataCompany');
+		$this->session->unset_userdata('filterByDataTransaction');
+		$this->session->unset_userdata('filterByType');
+		$this->session->unset_userdata('filterBySiteTransaction');
+		$this->session->unset_userdata('filterByData');
+		$this->session->unset_userdata('filterByStatus');
+		$this->session->unset_userdata('filterByStartDate');
+		$this->session->unset_userdata('filterByEndDate');
+		$this->session->unset_userdata('filterBySite');
 	}
 
 	/**
@@ -21,29 +35,85 @@ class Patient extends CI_Controller
 	 */
 	public function index()
 	{
-		$this->session->unset_userdata('keyword');
+		$this->session->unset_userdata('filterByDataPatientCheck');
+
+		$defaultFilterByCompany = $this->session->set_userdata('filterByCompany', '0');
+		$filterByCompany = '0';
+
+		if ($this->input->post('filter')) {
+			$filterByDataPatient = $this->input->post('filter-by-data');
+			$filterByCompany = $this->input->post('filter-by-company');
+			
+			$this->session->set_userdata('filterByDataPatient', $filterByDataPatient);
+			$this->session->set_userdata('filterByCompany', $filterByCompany);
+		} else {
+			$filterByDataPatient = $this->session->userdata('filterByDataPatient');
+			$filterByCompany = $this->session->userdata('filterByCompany');
+		}
+
+		// Pagination 
+
+		// load
+		$this->load->library('pagination');
+		// config
+		$config['base_url']   = base_url('patient/index');
+		$config['total_rows'] = $this->patient->get_total_data_patient($filterByDataPatient, $filterByCompany);
+		$config['per_page']   = 10;
+		// style
+		$config['full_tag_open'] = '<nav><ul class="pagination justify-content-end">';
+		$config['full_tag_close'] = '</ul></nav>';
+		
+		$config['first_link'] = 'First';
+		$config['first_tag_open'] = '<li class="page-item">';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_link'] = 'Last';
+		$config['last_tag_open'] = '<li class="page-item">';
+		$config['last_tag_close'] = '</li>';
+
+		$config['next_link'] = '&raquo';
+		$config['next_tag_open'] = '<li class="page-item">';
+		$config['next_tag_close'] = '</li>';
+
+		$config['prev_link'] = '&laquo';
+		$config['prev_tag_open'] = '<li class="page-item">';
+		$config['prev_tag_close'] = '</li>';
+
+		$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+
+		$config['num_tag_open'] = '<li class="page-item">';
+		$config['num_tag_close'] = '</li>';
+
+		$config['attributes'] = ['class' => 'page-link'];
+		// initialize
+		$this->pagination->initialize($config);
+
+		$start_data = $this->uri->segment(3);
 
 		$data = [
-			'title'   => 'Patient',
-			'companies'	=> $this->company->get_datatables_company()
+			'title'   	 => 'Pasien',
+			'total_data' => $config['total_rows'],
+			'patients'	 => $this->patient->get_data_patient($config['per_page'], $start_data, $filterByDataPatient, $filterByCompany),
+			'companies'	 => $this->company->get_companies()
 		];
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('templates/navbar');
-		$this->load->view('templates/sidebar');
 		$this->load->view('patients/index');
 		$this->load->view('templates/footer');
 	}
 
 	public function indexCheck()
 	{
-		date_default_timezone_set("Asia/Jakarta");
+		$this->session->unset_userdata('filterByDataPatient');
+		$this->session->unset_userdata('filterByCompany');
 
-		if ($this->input->post('search')) {
-			$keyword = $this->input->post('keyword');
-			$this->session->set_userdata('keyword', $keyword);
+		if ($this->input->post('filter')) {
+			$filterByDataPatientCheck = $this->input->post('filter-by-data');
+			$this->session->set_userdata('filterByDataPatientCheck', $filterByDataPatientCheck);
 		} else {
-			$keyword = $this->session->userdata('keyword');
+			$filterByDataPatientCheck = $this->session->userdata('filterByDataPatientCheck');
 		}
 
 		// Pagination 
@@ -52,7 +122,7 @@ class Patient extends CI_Controller
 		$this->load->library('pagination');
 		// config
 		$config['base_url']   = base_url('patient/indexCheck');
-		$config['total_rows'] = $this->mcu->get_total_data_mcu_today($keyword);
+		$config['total_rows'] = $this->mcu->get_total_data_mcu_today($filterByDataPatientCheck);
 		$config['per_page']   = 9;
 		// style
 		$config['full_tag_open'] = '<nav><ul class="pagination justify-content-end">';
@@ -88,13 +158,13 @@ class Patient extends CI_Controller
 		$start_data = $this->uri->segment(3);
 
 		$data = [
-			'title'    => 'Patient Check',
-			'patients' => $this->mcu->get_data_mcu_today($config['per_page'], $start_data, $keyword)
+			'title'      => 'Cek Pasien',
+			'total_data' => $config['total_rows'],
+			'patients'   => $this->mcu->get_data_mcu_today($config['per_page'], $start_data, $filterByDataPatientCheck)
 		];
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('templates/navbar');
-		$this->load->view('templates/sidebar');
 		$this->load->view('patients/index_check');
 		$this->load->view('templates/footer');
 	}
@@ -102,13 +172,13 @@ class Patient extends CI_Controller
 	public function detailIndexCheck($hash, $medical_record_number)
 	{
 		$data = [
-			'title'   => 'MCU',
-			'data'    => $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number)
+			'title'    => 'Cek Pasien',
+			'subtitle' => 'Detail Cek Pasien',
+			'data'     => $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number)
 		];
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('templates/navbar');
-		$this->load->view('templates/sidebar');
 		$this->load->view('patients/detail_index_check');
 		$this->load->view('templates/footer');
 	}
@@ -116,14 +186,14 @@ class Patient extends CI_Controller
 	public function registrationPatient()
 	{
 		$data = [
-			'title'     => 'Patient',
-			'companies'	=> $this->company->get_datatables_company(),
+			'title'     => 'Pasien',
+			'subtitle'  => 'Formulir Pendaftaran',
+			'companies'	=> $this->company->get_companies(),
 			'clinics' 	=> $this->clinic->get_list_of_clinic()
 		];
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('templates/navbar');
-		$this->load->view('templates/sidebar');
 		$this->load->view('patients/registration_patient');
 		$this->load->view('templates/footer');
 	}
@@ -164,8 +234,6 @@ class Patient extends CI_Controller
 
 	public function registrationPatientProcess()
 	{
-		date_default_timezone_set("Asia/Jakarta");
-
 		$id_number_old 		 = $this->input->post('id_number_old', TRUE);
 		$id_number 			 = $this->input->post('id_number', TRUE);
 		$duplicate_id_number = $this->patient->get_patient_exist($id_number_old);
@@ -271,7 +339,6 @@ class Patient extends CI_Controller
 
 			$this->patient->filePut($filename, $image);
 
-			date_default_timezone_set("Asia/Jakarta");
 			$data_patient = [
 				'id_number' 	  		=> $id_number,
 				'passport_number' 		=> $this->input->post('passport_number', TRUE),
@@ -351,6 +418,21 @@ class Patient extends CI_Controller
 
 			echo json_encode($id_patient);
 		}
+	}
+
+	public function formEditPatient($hash, $id_number)
+	{
+		$data = [
+			'title'     => 'Pasien',
+			'subtitle'  => 'Ubah Data Pasien',
+			'patient'   => $this->patient->get_data_patient_by_id_number($id_number),
+			'companies' => $this->company->get_companies()
+		];
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('templates/navbar');
+		$this->load->view('patients/form_edit_patient');
+		$this->load->view('templates/footer');
 	}
 
 	public function editPatient()

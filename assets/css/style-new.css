@@ -1,0 +1,360 @@
+body {
+    background-color: #fafbfd;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.rows {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.no-padding {
+    padding: 0!important;
+}
+
+/* 
+    Scrollbar
+*/
+
+/* width */
+::-webkit-scrollbar {
+    width: 7.5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #04AA6D; 
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #092213; 
+}
+
+.mobile-tab {
+    display: none;
+}
+
+.mobile-tab-content {
+    display: none;
+}
+
+.navbar-fixed.navbar-dark {
+    background-color: #092213;
+    color: #58727f;
+}
+
+.navbar-fixed {
+    position: fixed;
+    min-height: 100%;
+    width: 220px;
+    z-index: 2001;
+}
+
+.nav-header {
+    padding: 40px 20px;
+    background: url(../../assets/images/header-bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#page-wrapper {
+    margin: 0 0 0 220px;
+    padding: 0 15px;
+}
+
+.navbar {
+    position: relative;
+    min-height: 50px;
+    border: 1px solid transparent;
+}
+
+.navbar-static-top {
+    background: #fff;
+    width: 100%;
+    margin: 0;
+    height: 60px;
+}
+
+.navbar-top-links {
+    text-decoration: none;
+    list-style: none;
+    margin: 0;
+    padding: 5px 15px 5px 0;
+    text-align: right;
+}
+
+.navbar-right {
+    float: right !important;
+}
+
+.navbar-top-links li.user-name {
+    border-right: none;
+    max-width: 225px;
+    min-width: 225px;
+    position: relative;
+    top: 8px;
+    padding: 0;
+}
+
+.navbar-top-links li.user-name span a {
+    text-decoration: none;
+    color: #58727f;
+    font-weight: 400;
+}
+
+.navbar-top-links li {
+    display: inline-block;
+    font-size: 14px;
+    margin: 0;
+    padding: 2px 5px 5px 15px;
+    min-height: 40px;
+}
+
+.page-heading {
+    height: 52px;
+}
+
+.breadcrumb {
+    background: #fff;
+}
+
+.breadcrumb li a {
+    text-decoration: none;
+    color: #58727f;
+}
+
+.breadcrumb li a i {
+    font-size: 20px;
+    margin-right: 5px;
+    font-weight: 500;
+    color: #58727f;
+}
+
+.main-page {
+    padding: 10px;
+}
+
+.list-group .list-group-item {
+    background-color: transparent;
+}
+
+.list-group .list-group-item a {
+    text-decoration: none;
+    color: #58727f;
+    font-weight: 400;
+}
+
+.list-group .list-group-item i {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.list-group-item.active {
+    border-bottom: none !important;
+    border-left: 6px solid #04AA6D !important;
+    color: whitesmoke;
+    border-color: transparent;
+}
+
+.button-primary {
+    font-size: 13px;
+    background-color: #007BFF;
+    color: white;
+    padding: 3px 6px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+.button-primary:hover {
+    text-decoration: none;
+    color: white;
+    background-color: #0068D8;
+}
+
+.button-success {
+    font-size: 13px;
+    background-color: #28A745;
+    color: white;
+    padding: 3px 6px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+.button-success:hover {
+    text-decoration: none;
+    color: white;
+    background-color: #218D3A;
+}
+
+.button-info {
+    font-size: 13px;
+    background-color: #17A2B8;
+    color: white;
+    padding: 3px 6px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+.button-info:hover {
+    text-decoration: none;
+    color: white;
+    background-color: #13899C;
+}
+
+.button-warning {
+    font-size: 13px;
+    background-color: #FFC107;
+    color: black;
+    padding: 3px 6px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+.button-warning:hover {
+    text-decoration: none;
+    color: black;
+    background-color: #DEA700;
+}
+
+.button-danger {
+    font-size: 13px;
+    background-color: #DC3545;
+    color: white;
+    padding: 3px 6px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+.button-danger:hover {
+    text-decoration: none;
+    color: white;
+    background-color: #C52231;
+}
+
+.filter-wrapper {
+    margin: 0 0;
+    padding: 0 20px;
+}
+
+.label-filter {
+    font-size: 13px;
+    color: #999;
+}
+
+.my-table thead {
+    color: #58727f;
+}
+
+.my-table tbody {
+    color: #555;
+    font-size: 14px;
+}
+
+.page-item.active .page-link {
+    color: #fff;
+    background-color: #04AA6D;
+    border-color: #04AA6D;
+}
+
+.page-link {
+    color: #04AA6D;
+}
+
+.pagination-total {
+    color: #999;
+}
+
+.no-data-lab {
+    text-align: center;
+    color: #999;
+    font-size: 18px;
+}
+
+.no-data-lab i {
+    font-size: 10em;
+    padding: 25px;
+    color: #9999;
+}
+
+.page {
+    background-color: #fff;
+    margin: 0 10px;
+    padding: 10px;
+}
+
+.label-desc-patient {
+    color: #999;
+    font-size: 14px;
+}
+
+.value-desc-patient {
+    font-size: 15px;
+}
+
+.label-input-result {
+    font-weight: 700;
+    color: #555;
+    font-size: 14px;
+}
+
+.label-input-result-2 {
+    font-weight: 500;
+    color: #111;
+    font-size: 14px;
+}
+
+.value-input-result {
+    color: #888;
+}
+
+.label-medical-history {
+    font-size: 13px;
+    color: #555;
+}
+
+/* Small Device */
+
+@media (max-width: 575.98px) {
+    .navbar-backdrop {
+        display: none;
+    }
+
+    .navbar-static-top {
+        background-color: #092213;
+    }
+
+    .user-name a span {
+        color: #fff;
+    }
+
+    #page-wrapper {
+        width: 100%;
+        margin: 0;
+    }
+
+    .mobile-tab {
+        display: inline;
+        float: left !important;
+        margin: 2.5px 0 0 15px;
+        font-size: 24px;
+        color: #fff;
+    }
+
+    .mobile-tab-pointer {
+        cursor: pointer !important;
+    }
+
+    .list-group .list-group-item {
+        background-color: #092213;
+        color: #58727f;
+        font-weight: 400;
+    }
+}
