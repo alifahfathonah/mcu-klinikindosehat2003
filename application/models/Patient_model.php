@@ -3,6 +3,65 @@
 class Patient_model extends CI_Model
 {
 
+	function get_total_data_patient($keyword = null, $company = null)
+	{
+		date_default_timezone_set("Asia/Jakarta");
+
+		$this->db->select('*');
+		$this->db->from('patients');
+
+		if ($keyword) {
+			$this->db->like('id_number', $keyword);
+			$this->db->or_like('passport_number', $keyword);
+			$this->db->or_like('patients.name', $keyword);
+			$this->db->or_like('companies.name', $keyword);
+		}
+
+		$this->db->join('companies', 'companies.id=patients.id_company', 'left');
+		$this->db->join('mcus_v1', 'mcus_v1.id_patient=patients.id', 'left');
+
+		if ($company != 'all') {
+			$this->db->where('id_company', $company);
+		}
+
+		$this->db->where('patients.is_deleted', '0');
+
+		$this->db->group_by('patients.id');
+
+		return $this->db->get()->num_rows();
+	}
+
+	function get_data_patient($limit, $startPagination, $keyword = null, $company = 'all')
+	{
+		date_default_timezone_set("Asia/Jakarta");
+		
+		$this->db->select('patients.id as id, id_number, passport_number, patients.name as name, gender, place_of_birth, date_of_birth, patients.address as address, basic_safety_training, nationality, id_company, occupation, patients.is_deleted as is_deleted, companies.name as company_name, image');
+
+		if ($keyword) {
+			$this->db->like('id_number', $keyword);
+			$this->db->or_like('passport_number', $keyword);
+			$this->db->or_like('patients.name', $keyword);
+			$this->db->or_like('companies.name', $keyword);
+		}
+		
+		$this->db->from('patients');
+		$this->db->join('companies', 'companies.id=patients.id_company', 'left');
+		$this->db->join('mcus_v1', 'mcus_v1.id_patient=patients.id', 'left');
+
+		if ($company != 'all') {
+			$this->db->where('id_company', $company);
+		}
+
+		$this->db->where('patients.is_deleted', '0');
+
+		$this->db->group_by('patients.id');
+
+		$this->db->order_by('patients.name ASC');
+		$this->db->limit($limit, $startPagination);
+
+		return $this->db->get()->result_array();
+	}
+
 	function get_data_patient_by_id($id)
 	{
 		$this->db->select('patients.id as id, id_number, passport_number, patients.name as name, gender, place_of_birth, date_of_birth, patients.address as address, basic_safety_training, nationality, id_company, occupation, companies.name as company_name, companies.address as company_address, image');
@@ -15,9 +74,10 @@ class Patient_model extends CI_Model
 
 	function get_data_patient_by_id_number($id_number)
 	{
-		$this->db->select('patients.id as id, id_number, passport_number, patients.name as name, gender, place_of_birth, date_of_birth, patients.address as address, basic_safety_training, nationality, id_company, occupation, companies.name as company_name, companies.address as company_address');
+		$this->db->select('patients.id as id, id_number, passport_number, patients.name as name, gender, place_of_birth, date_of_birth, patients.address as address, basic_safety_training, nationality, id_company, occupation, companies.name as company_name, companies.address as company_address, image');
 		$this->db->from('patients');
 		$this->db->join('companies', 'companies.id=patients.id_company', 'left');
+		$this->db->join('mcus_v1', 'mcus_v1.id_patient=patients.id', 'left');
 		$this->db->where('patients.id_number', $id_number);
 		return $this->db->get()->row_array();
 	}

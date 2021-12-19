@@ -3,16 +3,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class User extends CI_Controller
 {
-
+	/**
+	 * Constructor for this controller
+	 */
 	public function __construct()
 	{
 		parent::__construct();
+
+		date_default_timezone_set("Asia/Jakarta");
+		
 		$this->load->model('user_model', 'user');
 		$this->load->model('clinic_model', 'clinic');
+		
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		}
-		$this->session->unset_userdata('keyword');
+		
+		$this->session->unset_userdata('filterByDataCompany');
+		$this->session->unset_userdata('filterByDataPatient');
+		$this->session->unset_userdata('filterByCompany');
+		$this->session->unset_userdata('filterByDataPatientCheck');
+		$this->session->unset_userdata('filterByDataTransaction');
+		$this->session->unset_userdata('filterByType');
+		$this->session->unset_userdata('filterBySiteTransaction');
+		$this->session->unset_userdata('filterByData');
+		$this->session->unset_userdata('filterByStatus');
+		$this->session->unset_userdata('filterByStartDate');
+		$this->session->unset_userdata('filterByEndDate');
+		$this->session->unset_userdata('filterBySite');
 	}
 
 	/**
@@ -21,21 +39,22 @@ class User extends CI_Controller
 	public function index()
 	{
 		$data = [
-			'title'   => 'Users',
+			'title'   => 'Pengguna',
 			'users'	  => $this->user->get_list_of_users(),
 			'clinics' => $this->clinic->get_list_of_clinic()
 		];
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('templates/navbar');
-		$this->load->view('templates/sidebar');
 		$this->load->view('users/index');
 		$this->load->view('templates/footer');
 	}
 
+	/**
+	 * Add new user process.
+	 */
 	public function addNewUser()
 	{
-		date_default_timezone_set("Asia/Jakarta");
 		$data = [
 			'name' 		 => $this->input->post('name'),
 			'email'		 => $this->input->post('email'),
@@ -52,10 +71,12 @@ class User extends CI_Controller
 		redirect('user');
 	}
 
+	/**
+	 * Edit data user process.
+	 */
 	public function editUser()
 	{
 		if ($this->input->post('password') == "") {
-			date_default_timezone_set("Asia/Jakarta");
 			$data = [
 				'name' 		 => $this->input->post('name'),
 				'email'		 => $this->input->post('email'),
@@ -64,7 +85,6 @@ class User extends CI_Controller
 				'updated_at' => date("Y-m-d H:i:s")
 			];
 		} else {
-			date_default_timezone_set("Asia/Jakarta");
 			$data = [
 				'name' 		 => $this->input->post('name'),
 				'email'		 => $this->input->post('email'),
@@ -81,6 +101,9 @@ class User extends CI_Controller
 		redirect('user');
 	}
 
+	/**
+	 * Delete user process.
+	 */
 	public function deleteUser()
 	{
 		$this->user->delete_user($this->input->post('id'));
@@ -90,6 +113,9 @@ class User extends CI_Controller
 		redirect('user');
 	}
 
+	/**
+	 * Activate account user process.
+	 */
 	public function activateUser()
 	{
 		$this->user->activate_user($this->input->post('id'));
@@ -99,6 +125,9 @@ class User extends CI_Controller
 		redirect('user');
 	}
 
+	/**
+	 * Deactivate account user process.
+	 */
 	public function disableUser()
 	{
 		$this->user->disable_user($this->input->post('id'));

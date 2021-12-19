@@ -7,123 +7,26 @@ use PhpOffice\PhpSpreadsheet\Reader\Csv;
 
 class Mcu extends CI_Controller
 {
-
+	/**
+	 * Constructor for this controller
+	 */
 	public function __construct()
 	{
 		parent::__construct();
+
+		date_default_timezone_set("Asia/Jakarta");
+		
 		$this->load->model('Mcu_model', 'mcu');
 		$this->load->model('Clinic_model', 'clinic');
 		$this->load->model('Patient_model', 'patient');
-		$this->session->unset_userdata('keyword');
-	}
 
-	/** 
-	 * Serverside Datatables for this controller
-	 */
-	function get_ajax_mcu()
-	{
-		$list = $this->mcu->get_datatables_mcu();
-		$data = [];
-		$no   = @$_POST['start'];
-		foreach ($list as $item) {
-			$no++;
-			$row   = [];
-			$row[] = $no . ".";
-			$row[] = ($item->mcu_manual != NULL) ? ($item->mcu_manual) : ($item->medical_record_number);
-			$row[] = $item->patient_name;
-			$row[] = $item->patient_id_number;
-
-			// Action Button
-			if ($item->mcu_is_fit == NULL) {
-				if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'doctor') {
-					if ($item->type_examination == 'umum') {
-						$row[] = '
-							<a class="button-warning" href="' . base_url('mcu/formEditUmumRevMcu/' . md5($item->id) . '/' . $item->medical_record_number) . '"><i class="fas fa-fw fa-edit"></i> <i>Edit</i></a>
-							<a class="button-primary" href="' . base_url('mcu/formInputUmumResult/' . md5($item->id) . '/' . $item->medical_record_number) . '"><i class="far fa-fw fa-window-restore"></i> <i>Input Umum Result</i></a>
-						';
-					} elseif ($item->type_examination == 'rev') {
-						$row[] = '
-							<a class="button-warning" href="' . base_url('mcu/formEditUmumRevMcu/' . md5($item->id) . '/' . $item->medical_record_number) . '"><i class="fas fa-fw fa-edit"></i> <i>Edit</i></a>
-							<a class="button-primary" href="' . base_url('mcu/formInputRevResult/' . md5($item->id) . '/' . $item->medical_record_number) . '"><i class="far fa-fw fa-window-restore"></i> <i>Input Revalidasi Result</i></a>
-						';
-					} elseif ($item->type_examination == 'mcu') {
-						$row[] = '
-							<a class="button-warning" href="' . base_url('mcu/formEditUmumRevMcu/' . md5($item->id) . '/' . $item->medical_record_number) . '"><i class="fas fa-fw fa-edit"></i> <i>Edit</i></a>
-							<a class="button-primary" href="' . base_url('mcu/formInputMcuResult/' . md5($item->id) . '/' . $item->medical_record_number) . '"><i class="far fa-fw fa-window-restore"></i> <i>Input MCU Result</i></a>
-						';
-					}
-				} else {
-					if ($item->type_examination == 'umum') {
-						$row[] = '
-							
-						';
-					} elseif ($item->type_examination == 'rev') {
-						$row[] = '
-							
-						';
-					} elseif ($item->type_examination == 'mcu') {
-						$row[] = '
-							
-						';
-					}
-				}
-			} else {
-				if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'doctor') {				
-					if ($item->type_examination == 'umum') {
-						$row[] = '
-							<a class="button-warning" href="' . base_url('mcu/formEditUmumWithResult/' . md5($item->id) . '/' . $item->medical_record_number) . '"><i class="fas fa-fw fa-edit"></i> <i>Edit</i></a>
-							<a class="button-info" href="' . base_url('mcu/downloadUmumResultPdf/' . $item->medical_record_number) . '"><i>Download</i> <i class="fas fa-fw fa-file-pdf"></i></a>
-							<a class="button-danger" href="' . base_url('mcu/previewUmumResultPdf/' . $item->medical_record_number) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
-						';
-					} elseif ($item->type_examination == 'rev') {
-						$row[] = '
-							<a class="button-warning" href="' . base_url('mcu/formEditRevWithResult/' . md5($item->id) . '/' . $item->medical_record_number) . '"><i class="fas fa-fw fa-edit"></i> <i>Edit</i></a>
-							<a class="button-success" href="' . base_url('mcu/downloadQRCodePng/' . $item->medical_record_number) . '"><i>Download</i> <i class="fas fa-fw fa-qrcode"></i></a>
-							<a class="button-info" href="' . base_url('mcu/downloadRevResultPdf/' . $item->medical_record_number) . '"><i>Download</i> <i class="fas fa-fw fa-file-pdf"></i></a>
-							<a class="button-danger" href="' . base_url('mcu/previewRevResultPdf/' . $item->medical_record_number) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
-						';	
-					} elseif ($item->type_examination == 'mcu') {
-						$row[] = '
-							<a class="button-warning" href="' . base_url('mcu/formEditMcuWithResult/' . md5($item->id) . '/' . $item->medical_record_number) . '"><i class="fas fa-fw fa-edit"></i> <i>Edit</i></a>
-							<a class="button-success" href="' . base_url('mcu/downloadQRCodePng/' . $item->medical_record_number) . '"><i>Download</i> <i class="fas fa-fw fa-qrcode"></i></a>
-							<a class="button-info" href="' . base_url('mcu/downloadMcuResultPdf/' . $item->medical_record_number) . '"><i>Download</i> <i class="fas fa-fw fa-file-pdf"></i></a>
-							<a class="button-danger" href="' . base_url('mcu/previewMcuResultPdf/' . $item->medical_record_number) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
-						';
-					}
-				} else {
-					if ($item->type_examination == 'umum') {
-						$row[] = '
-							<a class="button-info" href="' . base_url('mcu/downloadUmumResultPdf/' . $item->medical_record_number) . '"><i>Download</i> <i class="fas fa-fw fa-file-pdf"></i></a>
-							<a class="button-danger" href="' . base_url('mcu/previewUmumResultPdf/' . $item->medical_record_number) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
-						';
-					} elseif ($item->type_examination == 'rev') {
-						$row[] = '
-							<a class="button-success" href="' . base_url('mcu/downloadQRCodePng/' . $item->medical_record_number) . '"><i>Download</i> <i class="fas fa-fw fa-qrcode"></i></a>
-							<a class="button-info" href="' . base_url('mcu/downloadRevResultPdf/' . $item->medical_record_number) . '"><i>Download</i> <i class="fas fa-fw fa-file-pdf"></i></a>
-							<a class="button-danger" href="' . base_url('mcu/previewRevResultPdf/' . $item->medical_record_number) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
-						';
-					} elseif ($item->type_examination == 'mcu') {
-						$row[] = '
-							<a class="button-success" href="' . base_url('mcu/downloadQRCodePng/' . $item->medical_record_number) . '"><i>Download</i> <i class="fas fa-fw fa-qrcode"></i></a>
-							<a class="button-info" href="' . base_url('mcu/downloadMcuResultPdf/' . $item->medical_record_number) . '"><i>Download</i> <i class="fas fa-fw fa-file-pdf"></i></a>
-							<a class="button-danger" href="' . base_url('mcu/previewMcuResultPdf/' . $item->medical_record_number) . '"><i class="far fa-fw fa-eye"></i> <i>View</i></a>
-						';
-					}
-				}
-			}
-
-			$data[] = $row;
-		}
-
-		$output = [
-			"draw"            => @$_POST['draw'],
-			"recordsTotal"    => $this->mcu->count_all(),
-			"recordsFiltered" => $this->mcu->count_filtered(),
-			"data"            => $data
-		];
-
-		// Output to JSON Format
-		echo json_encode($output);
+		$this->session->unset_userdata('filterByDataCompany');
+		$this->session->unset_userdata('filterByDataPatient');
+		$this->session->unset_userdata('filterByCompany');
+		$this->session->unset_userdata('filterByDataPatientCheck');
+		$this->session->unset_userdata('filterByDataTransaction');
+		$this->session->unset_userdata('filterByType');
+		$this->session->unset_userdata('filterBySiteTransaction');
 	}
 
 	/**
@@ -134,180 +37,109 @@ class Mcu extends CI_Controller
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		} else {
+			if ($this->input->post('filter')) {
+				$filterByData = $this->input->post('filter-by-data');
+				$filterByStatus = $this->input->post('filter-by-status');
+				$filterByStartDate = $this->input->post('filter-by-start-date');
+				$filterByEndDate = $this->input->post('filter-by-end-date');
+				$filterBySite = $this->input->post('filter-by-site');
+				
+				$this->session->set_userdata('filterByData', $filterByData);
+				$this->session->set_userdata('filterByStatus', $filterByStatus);
+				$this->session->set_userdata('filterByStartDate', $filterByStartDate);
+				$this->session->set_userdata('filterByEndDate', $filterByEndDate);
+				$this->session->set_userdata('filterBySite', $filterBySite);
+			} else {
+				$filterByData = $this->session->userdata('filterByData');
+				$filterByStatus = $this->session->userdata('filterByStatus');
+				$filterByStartDate = $this->session->userdata('filterByStartDate');
+				$filterByEndDate = $this->session->userdata('filterByEndDate');
+				$filterBySite = $this->session->userdata('filterBySite');
+			}
+
+			// Pagination 
+
+			// load
+			$this->load->library('pagination');
+			// config
+			$config['base_url']   = base_url('mcu/index');
+			$config['total_rows'] = $this->mcu->get_total_data_mcu($filterByData, $filterByStatus, $filterByStartDate, $filterByEndDate, $filterBySite);
+			$config['per_page']   = 15;
+			// style
+			$config['full_tag_open'] = '<nav><ul class="pagination justify-content-end">';
+			$config['full_tag_close'] = '</ul></nav>';
+			
+			$config['first_link'] = 'First';
+			$config['first_tag_open'] = '<li class="page-item">';
+			$config['first_tag_close'] = '</li>';
+			
+			$config['last_link'] = 'Last';
+			$config['last_tag_open'] = '<li class="page-item">';
+			$config['last_tag_close'] = '</li>';
+
+			$config['next_link'] = '&raquo';
+			$config['next_tag_open'] = '<li class="page-item">';
+			$config['next_tag_close'] = '</li>';
+
+			$config['prev_link'] = '&laquo';
+			$config['prev_tag_open'] = '<li class="page-item">';
+			$config['prev_tag_close'] = '</li>';
+
+			$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+			$config['cur_tag_close'] = '</a></li>';
+
+			$config['num_tag_open'] = '<li class="page-item">';
+			$config['num_tag_close'] = '</li>';
+
+			$config['attributes'] = ['class' => 'page-link'];
+			// initialize
+			$this->pagination->initialize($config);
+
+			$start_data = $this->uri->segment(3);
+
 			$data = [
-				'title'   => 'MCU',
-				'clinics' => $this->clinic->get_list_of_clinic()
+				'title'   	 => 'Hasil Lab',
+				'clinics'    => $this->clinic->get_list_of_clinic(),
+				'total_data' => $config['total_rows'],
+				'mcus'	  	 => $this->mcu->get_data_mcu($config['per_page'], $start_data, $filterByData, $filterByStatus, $filterByStartDate, $filterByEndDate, $filterBySite)
 			];
 
 			$this->load->view('templates/header', $data);
 			$this->load->view('templates/navbar');
-			$this->load->view('templates/sidebar');
 			$this->load->view('mcus/index');
 			$this->load->view('templates/footer');
 		}
 	}
 
-	public function makeRev()
-	{
-		if (!$this->session->has_userdata('logged_in')) {
-			redirect('auth');
-		} else {
-			date_default_timezone_set("Asia/Jakarta");
-
-			$id_patient 		   = $this->input->post('id_patient');
-			$url_for_qrcode		   = base_url('mcu/mcuResultPreview/');
-			$medical_record_number = $this->mcu->get_medical_record_number('rev');
-			$no_transaction		   = $this->mcu->get_no_transaction($id_patient, 'rev');
-
-			// Save file image of qrcode
-			$this->load->library('ciqrcode');
-
-			$configUploadQrcode['cacheable'] = true;
-			$configUploadQrcode['cachedir']	 = './assets/';
-			$configUploadQrcode['errorlog']  = './assets/';
-			$configUploadQrcode['imagedir']  = './assets/images/qrcode/';
-			$configUploadQrcode['quality']   = true;
-			$configUploadQrcode['size']      = '1024';
-			$configUploadQrcode['black']     = array(224, 255, 255);
-			$configUploadQrcode['white']     = array(70, 130, 180);
-			$this->ciqrcode->initialize($configUploadQrcode);
-
-			$image_name = $medical_record_number . '.png';
-
-			$params['data']  	= $url_for_qrcode . $medical_record_number;
-			$params['level'] 	= 'H';
-			$params['size']  	= 10;
-			$params['savename'] = FCPATH . $configUploadQrcode['imagedir'] . $image_name;
-			$this->ciqrcode->generate($params);
-
-			$data_mcus_v1 = [
-				'medical_record_number' => $medical_record_number,
-				'id_clinic'				=> $this->input->post('id_clinic'),
-				'id_patient'			=> $id_patient,
-				'id_number_patient'		=> $this->input->post('id_number_patient'),
-				'name_patient'			=> $this->input->post('name_patient'),
-				'no_transaction'		=> $no_transaction,
-				'type_examination'		=> 'rev',
-				'date_examination'		=> $this->input->post('date_examination'),
-				'qrcode'				=> $image_name,
-				'created_at'			=> date('Y-m-d H:i:s')
-			];
-
-			$data_transactions = [
-				'no_transaction'		=> $no_transaction,
-				'id_clinic'				=> $this->input->post('id_clinic'),
-				'id_patient' 			=> $id_patient,
-				'id_company' 			=> $this->input->post('id_company'),
-				'medical_record_number' => $medical_record_number,
-				'patient_name' 			=> $this->input->post('name_patient'),
-				'patient_id_number' 	=> $this->input->post('id_number_patient'),
-				'type_examination' 		=> 'rev',
-				'type_transaction'	 	=> $this->input->post('type_transaction'),
-				'total_price' 			=> preg_replace("/[^0-9]/", "", $this->input->post('total_price'))
-			];
-
-			$this->mcu->store_to_table_mcus_v1($data_mcus_v1);
-			$this->mcu->store_to_table_transactions($data_transactions);
-
-			$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'New Revalidation has been added!',showConfirmButton: false,timer: 1500})</script>");
-
-			redirect('patient');
-		}
-	}
-
-	public function makeMcu()
-	{
-		if (!$this->session->has_userdata('logged_in')) {
-			redirect('auth');
-		} else {
-			date_default_timezone_set("Asia/Jakarta");
-
-			$id_patient 		   = $this->input->post('id_patient');
-			$url_for_qrcode		   = base_url('mcu/mcuResultPreview/');
-			$medical_record_number = $this->mcu->get_medical_record_number('mcu');
-			$no_transaction		   = $this->mcu->get_no_transaction($id_patient, 'mcu');
-
-			// Save file image of qrcode
-			$this->load->library('ciqrcode');
-
-			$configUploadQrcode['cacheable'] = true;
-			$configUploadQrcode['cachedir']	 = './assets/';
-			$configUploadQrcode['errorlog']  = './assets/';
-			$configUploadQrcode['imagedir']  = './assets/images/qrcode/';
-			$configUploadQrcode['quality']   = true;
-			$configUploadQrcode['size']      = '1024';
-			$configUploadQrcode['black']     = array(224, 255, 255);
-			$configUploadQrcode['white']     = array(70, 130, 180);
-			$this->ciqrcode->initialize($configUploadQrcode);
-
-			$image_name = $medical_record_number . '.png';
-
-			$params['data']  	= $url_for_qrcode . $medical_record_number;
-			$params['level'] 	= 'H';
-			$params['size']  	= 10;
-			$params['savename'] = FCPATH . $configUploadQrcode['imagedir'] . $image_name;
-			$this->ciqrcode->generate($params);
-
-			$data_mcus_v1 = [
-				'medical_record_number' => $medical_record_number,
-				'id_clinic'				=> $this->input->post('id_clinic'),
-				'id_patient'			=> $id_patient,
-				'id_number_patient'		=> $this->input->post('id_number_patient'),
-				'name_patient'			=> $this->input->post('name_patient'),
-				'no_transaction'		=> $no_transaction,
-				'type_examination'		=> 'mcu',
-				'date_examination'		=> $this->input->post('date_examination'),
-				'qrcode'				=> $image_name,
-				'created_at'			=> date('Y-m-d H:i:s')
-			];
-
-			$data_transactions = [
-				'no_transaction'		=> $no_transaction,
-				'id_clinic'				=> $this->input->post('id_clinic'),
-				'id_patient' 			=> $id_patient,
-				'id_company' 			=> $this->input->post('id_company'),
-				'medical_record_number' => $medical_record_number,
-				'patient_name' 			=> $this->input->post('name_patient'),
-				'patient_id_number' 	=> $this->input->post('id_number_patient'),
-				'type_examination' 		=> 'mcu',
-				'type_transaction'	 	=> $this->input->post('type_transaction'),
-				'total_price' 			=> preg_replace("/[^0-9]/", "", $this->input->post('total_price'))
-			];
-
-			$this->mcu->store_to_table_mcus_v1($data_mcus_v1);
-			$this->mcu->store_to_table_transactions($data_transactions);
-
-			$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'New MCU has been added!',showConfirmButton: false,timer: 1500})</script>");
-
-			redirect('patient');
-		}
-	}
-
+	/**
+	 * Page input laboratory result - Revalidation
+	 */
 	public function formInputRevResult($id, $medical_record_number)
 	{
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		} else {
 			$data = [
-				'title'   => 'MCU',
-				'data'    => $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number)
+				'title'    => 'Hasil Lab',
+				'subtitle' => 'Input Hasil Lab - Revalidasi',
+				'data'     => $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number)
 			];
 
 			$this->load->view('templates/header', $data);
 			$this->load->view('templates/navbar');
-			$this->load->view('templates/sidebar');
 			$this->load->view('mcus/form_input_rev_result');
 			$this->load->view('templates/footer');
 		}
 	}
 
+	/**
+	 * Input process laboratory result - Revalidation
+	 */
 	public function inputRevResultProcess()
 	{
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		} else {
-			date_default_timezone_set("Asia/Jakarta");
-
 			$medical_record_number = $this->input->post('medical_record_number');
 
 			$data_patients = [
@@ -401,37 +233,41 @@ class Mcu extends CI_Controller
 			$this->mcu->update_table_mcus_v1($medical_record_number, $data_mcus_v1);
 			$this->mcu->store_to_table_mcus_v2($data_mcus_v2);
 
-			$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'Insert Revalidation Result successfully!',showConfirmButton: false,timer: 1500})</script>");
+			$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'Insert Revalidation result successfully!',showConfirmButton: false,timer: 1500})</script>");
 
 			redirect('mcu');
 		}
 	}
 
+	/**
+	 * Page input laboratory result - Medical Check Up
+	 */
 	public function formInputMcuResult($id, $medical_record_number)
 	{
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		} else {
 			$data = [
-				'title'   => 'MCU',
-				'data'    => $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number)
+				'title'    => 'Hasil Lab',
+				'subtitle' => 'Input Hasil Lab - Medical Check Up',
+				'data'     => $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number)
 			];
 
 			$this->load->view('templates/header', $data);
 			$this->load->view('templates/navbar');
-			$this->load->view('templates/sidebar');
 			$this->load->view('mcus/form_input_mcu_result');
 			$this->load->view('templates/footer');
 		}
 	}
 
+	/**
+	 * Input process laboratory result - Medical Check Up
+	 */
 	public function inputMcuResultProcess()
 	{
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		} else {
-			date_default_timezone_set("Asia/Jakarta");
-
 			$medical_record_number = $this->input->post('medical_record_number');
 
 			$data_patients = [
@@ -525,31 +361,37 @@ class Mcu extends CI_Controller
 			$this->mcu->update_table_mcus_v1($medical_record_number, $data_mcus_v1);
 			$this->mcu->store_to_table_mcus_v2($data_mcus_v2);
 
-			$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'Insert MCU Result successfully!',showConfirmButton: false,timer: 1500})</script>");
+			$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'Insert Medical Check Up result successfully!',showConfirmButton: false,timer: 1500})</script>");
 
 			redirect('mcu');
 		}
 	}
 
+	/**
+	 * Page edit without result
+	 */
 	public function formEditUmumRevMcu($id, $medical_record_number)
 	{
 		if (!$this->session->has_userdata('logged_in')) {
 			redirect('auth');
 		} else {
 			$data = [
-				'title'   => 'MCU',
-				'data' 	  => $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number),
-				'clinics' => $this->clinic->get_list_of_clinic()
+				'title'    => 'Hasil Lab',
+				'subtitle' => 'Ubah Formulir Pendaftaran',
+				'data' 	   => $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number),
+				'clinics'  => $this->clinic->get_list_of_clinic()
 			];
 
 			$this->load->view('templates/header', $data);
 			$this->load->view('templates/navbar');
-			$this->load->view('templates/sidebar');
 			$this->load->view('mcus/form_edit_rev_mcu');
 			$this->load->view('templates/footer');
 		}
 	}
 
+	/**
+	 * Update process without result
+	 */
 	public function editUmumRevMcuProcess()
 	{
 		if (!$this->session->has_userdata('logged_in')) {
@@ -570,12 +412,15 @@ class Mcu extends CI_Controller
 			$this->mcu->update_table_mcus_v1($medical_record_number, $data_mcus_v1);
 			$this->mcu->update_table_transactions($medical_record_number, $data_transactions);
 
-			$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'Edit MCU Result successfully!',showConfirmButton: false,timer: 1500})</script>");
+			$this->session->set_flashdata('flash', "<script>Swal.fire({position: 'top-end',icon: 'success',title: 'Edit form laboratory successfully!',showConfirmButton: false,timer: 1500})</script>");
 
 			redirect('mcu');
 		}
 	}
 
+	/**
+	 * Page edit laboratory result - Revalidasi
+	 */
 	public function formEditRevWithResult($id, $medical_record_number)
 	{
 		if (!$this->session->has_userdata('logged_in')) {
@@ -590,7 +435,8 @@ class Mcu extends CI_Controller
 			}
 
 			$data = [
-				'title'  		 => 'MCU',
+				'title'  		 => 'Hasil Lab',
+				'subtitle'		 => 'Ubah Data Hasil Lab - Revalidasi',
 				'data' 	 		 => $lab,
 				'is_all_examine' => $is_all_examine,
 				'clinics'		 => $this->clinic->get_list_of_clinic()
@@ -598,12 +444,14 @@ class Mcu extends CI_Controller
 
 			$this->load->view('templates/header', $data);
 			$this->load->view('templates/navbar');
-			$this->load->view('templates/sidebar');
 			$this->load->view('mcus/form_edit_rev_with_result');
 			$this->load->view('templates/footer');
 		}
 	}
 
+	/**
+	 * Update process laboratory result - Revalidasi
+	 */
 	public function editRevProcess()
 	{
 		if (!$this->session->has_userdata('logged_in')) {
@@ -708,6 +556,9 @@ class Mcu extends CI_Controller
 		}
 	}
 
+	/**
+	 * Page edit laboratory result - Medical Check Up
+	 */
 	public function formEditMcuWithResult($id, $medical_record_number)
 	{
 		if (!$this->session->has_userdata('logged_in')) {
@@ -722,20 +573,23 @@ class Mcu extends CI_Controller
 			}
 
 			$data = [
-				'title'  		 => 'MCU',
+				'title'  		 => 'Hasil Lab',
+				'subtitle'		 => 'Ubah Data Hasil Lab - Medical Check Up',
 				'data' 	 		 => $lab,
 				'is_all_examine' => $is_all_examine,
-				'clinics' => $this->clinic->get_list_of_clinic()
+				'clinics' 		 => $this->clinic->get_list_of_clinic()
 			];
 
 			$this->load->view('templates/header', $data);
 			$this->load->view('templates/navbar');
-			$this->load->view('templates/sidebar');
 			$this->load->view('mcus/form_edit_mcu_with_result');
 			$this->load->view('templates/footer');
 		}
 	}
 
+	/**
+	 * Update process laboratory result - Medical Check Up
+	 */
 	public function editMcuProcess()
 	{
 		if (!$this->session->has_userdata('logged_in')) {
@@ -840,6 +694,9 @@ class Mcu extends CI_Controller
 		}
 	}
 
+	/**
+	 * Return image QR
+	 */
 	public function downloadQRCodePng($medical_record_number)
 	{
 		$file_name = $medical_record_number . '.png';
@@ -847,6 +704,9 @@ class Mcu extends CI_Controller
 		force_download($file_name, file_get_contents($file_path));
 	}
 
+	/**
+	 * View result laboratory result - Revalidasi
+	 */
 	public function previewRevResultPdf($medical_record_number)
 	{
 		$data = $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number);
@@ -872,6 +732,9 @@ class Mcu extends CI_Controller
 		$mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
 	}
 
+	/**
+	 * View result laboratory result - Medical Check Up
+	 */
 	public function previewMcuResultPdf($medical_record_number)
 	{
 		$data = $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number);
@@ -906,6 +769,9 @@ class Mcu extends CI_Controller
 		$mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
 	}
 	
+	/**
+	 * Return Pdf file result laboratory result - Revalidasi
+	 */
 	public function downloadRevResultPdf($medical_record_number)
 	{
 		$data = $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number);
@@ -931,6 +797,9 @@ class Mcu extends CI_Controller
 		$mpdf->Output($filename, \Mpdf\Output\Destination::DOWNLOAD);
 	}
 
+	/**
+	 * Return Pdf file result laboratory result - Medical Check Up
+	 */
 	public function downloadMcuResultPdf($medical_record_number)
 	{
 		$data = $this->mcu->get_data_mcu_by_medical_record_number($medical_record_number);
@@ -965,6 +834,9 @@ class Mcu extends CI_Controller
 		$mpdf->Output($filename, \Mpdf\Output\Destination::DOWNLOAD);
 	}
 
+	/**
+	 * View of scan QR laboratory result
+	 */
 	public function mcuResultPreview($medical_record_number)
 	{
 		$data = [
@@ -974,10 +846,11 @@ class Mcu extends CI_Controller
 		$this->load->view('mcus/mcu_result_preview', $data);
 	}
 
+	/**
+	 * Return Excel file data of laboratory result
+	 */
 	public function downloadExcelReportMcu()
 	{
-		date_default_timezone_set("Asia/Jakarta");
-
 		$id_clinic = $this->input->post('id_clinic');
 		$start_date = $this->input->post('start_date');
 		$end_date = $this->input->post('end_date');

@@ -76,6 +76,76 @@ class Transaction_model extends CI_Model
 
 	// End Datatables
 
+	function get_total_data_transaction($keyword = null, $status = null, $site = null)
+	{
+		date_default_timezone_set("Asia/Jakarta");
+
+		$this->db->select('*');
+		$this->db->from('transactions');
+
+		if ($keyword) {
+			$this->db->like('no_transaction', $keyword);
+			$this->db->or_like('medical_record_number', $keyword);
+			$this->db->or_like('patient_name', $keyword);
+			$this->db->or_like('patient_id_number', $keyword);
+		}
+
+		if ($status == 'cash') {
+			$this->db->where('type_transaction', 'cash');
+		} elseif ($status == 'debit') {
+			$this->db->where('type_transaction', 'debit');
+		} elseif ($status == 'company') {
+			$this->db->where('type_transaction', 'company');
+		}
+
+		if ( $this->session->userdata('role') == 'superuser' ) {
+			if ($site > 0) {
+				$this->db->where('id_clinic', $site);
+			}
+		} else {
+			$this->db->where('id_clinic', $this->session->userdata('site'));
+		}
+
+		return $this->db->get()->num_rows();
+	}
+
+	function get_data_transactions($limit, $startPagination, $keyword = null, $status = null, $site = null)
+	{
+		date_default_timezone_set("Asia/Jakarta");
+		
+		$this->db->select('*');
+
+		if ($keyword) {
+			$this->db->like('no_transaction', $keyword);
+			$this->db->or_like('medical_record_number', $keyword);
+			$this->db->or_like('patient_name', $keyword);
+			$this->db->or_like('patient_id_number', $keyword);
+		}
+		
+		$this->db->from('transactions');
+
+		if ($status == 'cash') {
+			$this->db->where('type_transaction', 'cash');
+		} elseif ($status == 'debit') {
+			$this->db->where('type_transaction', 'debit');
+		} elseif ($status == 'company') {
+			$this->db->where('type_transaction', 'company');
+		}
+
+		if ( $this->session->userdata('role') == 'superuser' ) {
+			if ($site > 0) {
+				$this->db->where('id_clinic', $site);
+			}
+		} else {
+			$this->db->where('id_clinic', $this->session->userdata('site'));
+		}
+		
+		$this->db->order_by('created_at DESC');
+		$this->db->limit($limit, $startPagination);
+		
+		return $this->db->get()->result_array();
+	}
+
 	function get_all_data_transactions()
 	{
 		return $this->db->get('transactions')->result_array();
