@@ -89,7 +89,7 @@
 												</select>
 											</div>
 											<div class="form-group mt-n2">
-												<label class="label-input-result-2 mb-n1" for="occupation">Kewarganeragaan&nbsp;&nbsp;
+												<label class="label-input-result-2 mb-n1" for="occupation">Jabatan&nbsp;&nbsp;
 													<input type="checkbox" id="occu" onclick="if(this.checked){myFunction7()}else{myFunction8()}"> <label for="occu">Private</label>
 												</label>
 												<input type="text" class="form-control form-control-sm value-input-result" id="occupation" name="occupation" required autocomplete="off">
