@@ -60,7 +60,7 @@
 											</div>
 											<div class="form-group mt-n2">
 												<label class="label-input-result-2 mb-n1" for="date_of_birth">Tanggal Lahir</label>
-												<input type="text" class="form-control value-input-result" id="date_of_birth" name="date_of_birth" required autocomplete="off" readonly style="background-color: transparent; cursor: pointer;">
+												<input type="text" class="form-control value-input-result" id="date_of_birth" name="date_of_birth" required autocomplete="off">
 											</div>
 											<div class="form-group mt-n2 mt-n1" id="address-display" style="display: none;">
 												<label class="label-input-result-2" for="address">Alamat</label>

@@ -16,11 +16,11 @@
 							</div>
 							<div class="form-group">
 								<label class="label-input-result" for="place_of_birth">Tempat Lahir</label>
-								<input type="text" class="form-control value-input-result" id="place_of_birth" place_of_birth="place_of_birth" value="<?= $patient['place_of_birth'] ?>" required autocomplete="off">
+								<input type="text" class="form-control value-input-result" id="place_of_birth" name="place_of_birth" value="<?= $patient['place_of_birth'] ?>" required autocomplete="off">
 							</div>
 							<div class="form-group">
 								<label class="label-input-result" for="basic_safety_training">Nomor BST</label>
-								<input type="text" class="form-control value-input-result" id="basic_safety_training" basic_safety_training="basic_safety_training" value="<?= $patient['basic_safety_training'] ?>" required autocomplete="off">
+								<input type="text" class="form-control value-input-result" id="basic_safety_training" name="basic_safety_training" value="<?= $patient['basic_safety_training'] ?>" required autocomplete="off">
 							</div>
 							<div class="form-group">
 								<label class="label-input-result" for="id_company">Perusahaan</label>
@@ -48,15 +48,15 @@
 							</div>
 							<div class="form-group">
 								<label class="label-input-result" for="date_of_birth">Tanggal Lahir</label>
-								<input type="text" class="form-control value-input-result" id="date_of_birth" name="date_of_birth" value="<?= $patient['date_of_birth'] ?>" required autocomplete="off" readonly style="background-color: transparent; cursor: pointer;">
+								<input type="text" class="form-control value-input-result" id="date_of_birth" name="date_of_birth" value="<?= $patient['date_of_birth'] ?>" required autocomplete="off">
 							</div>
 							<div class="form-group">
 								<label class="label-input-result" for="nationality">Kewarganegaraan</label>
-								<input type="text" class="form-control value-input-result" id="nationality" nationality="nationality" value="<?= $patient['nationality'] ?>" required autocomplete="off">
+								<input type="text" class="form-control value-input-result" id="nationality" name="nationality" value="<?= $patient['nationality'] ?>" required autocomplete="off">
 							</div>
 							<div class="form-group">
 								<label class="label-input-result" for="occupation">Jabatan</label>
-								<input type="text" class="form-control value-input-result" id="occupation" occupation="occupation" value="<?= $patient['occupation'] ?>" required autocomplete="off">
+								<input type="text" class="form-control value-input-result" id="occupation" name="occupation" value="<?= $patient['occupation'] ?>" required autocomplete="off">
 							</div>
 						</div>
 					</div>
