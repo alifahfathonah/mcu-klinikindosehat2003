@@ -158,12 +158,12 @@
 				</button>
 			</div>
 			<form method="post" action="<?= base_url('mcu/downloadExcelReportMcu') ?>">
+				<input type="hidden" name="start_date">
+				<input type="hidden" name="end_date">
 				<div class="modal-body">
-					<div id="input-filters-date-export"></div>
 					<div class="form-group">
 						<label for="id_clinic" class="label-input-result">Klinik</label>
 						<select class="form-control form-control-sm value-input-result" id="id_clinic" name="id_clinic">
-							<option value="0">Semua Klinik</option>
 							<?php foreach ($clinics as $clinic) : ?>
 								<option value="<?= $clinic['id'] ?>">
 									<?= $clinic['name'] ?>		
@@ -224,18 +224,18 @@
 			cb(moment("<?= $this->session->userdata('filterByStartDate') ?> ?>"), moment("<?= $this->session->userdata('filterByEndDate') ?> ?>"));
 		<?php endif ?>
 
-		function cb2(start, end) {
-			$('#reportrangeexport span').html(start.format('DD-MM-YYYY') + ' s/d ' + end.format('DD-MM-YYYY'));
-			$('#input-filters-date-export').empty();
-			$('#input-filters-date-export').append(`
-				<input type="hidden" name="start-date" value="`+ start.format('YYYY-MM-DD') +`">
-				<input type="hidden" name="end-date" value="`+ end.format('YYYY-MM-DD') +`">`
-        	);
+		let startExport = moment().startOf('month');
+		let endExport = moment();
+
+		function cb2(startExport, endExport) {
+			$('#reportrangeexport span').html(startExport.format('DD-MM-YYYY') + ' s/d ' + endExport.format('DD-MM-YYYY'));
+			$('input[name="start_date"]').val(startExport.format('YYYY-MM-DD'));
+			$('input[name="end_date"]').val(endExport.format('YYYY-MM-DD'));
 		};
 
 		$('#reportrangeexport').daterangepicker({
-			startDate: start,
-			endDate: end,
+			startDate: startExport,
+			endDate: endExport,
 			ranges: {
 				'Today': [moment(), moment()],
 				'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -245,5 +245,7 @@
 				'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
 			}
 		}, cb2);
+
+		cb2(startExport, endExport);
 	});
 </script>
