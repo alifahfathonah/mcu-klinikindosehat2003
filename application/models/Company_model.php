@@ -17,6 +17,8 @@ class Company_model extends CI_Model
 		$this->db->select('*');
 		$this->db->from('companies');
 
+		$this->db->where('is_deleted', '0');
+
 		if ($keyword) {
 			$this->db->like('name', $keyword);
 			$this->db->or_like('address', $keyword);
@@ -31,6 +33,8 @@ class Company_model extends CI_Model
 
 		$this->db->select('*');
 		$this->db->from('companies');
+
+		$this->db->where('is_deleted', '0');
 
 		if ($keyword) {
 			$this->db->like('name', $keyword);
