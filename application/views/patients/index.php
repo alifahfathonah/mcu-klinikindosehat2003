@@ -74,7 +74,7 @@
 								<?php endforeach ?>
 							<?php else : ?>
 								<tr>
-									<td colspan="5" class="no-data-lab">
+									<td colspan="7" class="no-data-lab">
 										<i class="fas fa-search"></i><br>
 										Data tidak ditemukan
 									</td>

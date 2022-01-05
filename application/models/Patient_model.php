@@ -10,21 +10,18 @@ class Patient_model extends CI_Model
 		$this->db->select('*');
 		$this->db->from('patients');
 
-		if ($keyword) {
-			$this->db->like('id_number', $keyword);
-			$this->db->or_like('passport_number', $keyword);
-			$this->db->or_like('patients.name', $keyword);
-			$this->db->or_like('companies.name', $keyword);
-		}
-
 		$this->db->join('companies', 'companies.id=patients.id_company', 'left');
 		$this->db->join('mcus_v1', 'mcus_v1.id_patient=patients.id', 'left');
+
+		$this->db->where('patients.is_deleted', 0);
+
+		if ($keyword) {
+			$this->db->where("(id_number LIKE '%".$keyword."%' OR passport_number LIKE '%".$keyword."%' OR patients.name LIKE '%".$keyword."%' OR companies.name LIKE '%".$keyword."%')", NULL, FALSE);
+		}
 
 		if ($company != 'all') {
 			$this->db->where('id_company', $company);
 		}
-
-		$this->db->where('patients.is_deleted', 0);
 
 		$this->db->group_by('patients.id');
 
@@ -36,23 +33,20 @@ class Patient_model extends CI_Model
 		date_default_timezone_set("Asia/Jakarta");
 		
 		$this->db->select('patients.id as id, id_number, passport_number, patients.name as name, gender, place_of_birth, date_of_birth, patients.address as address, basic_safety_training, nationality, id_company, occupation, patients.is_deleted as is_deleted, companies.name as company_name, image');
-
-		if ($keyword) {
-			$this->db->like('id_number', $keyword);
-			$this->db->or_like('passport_number', $keyword);
-			$this->db->or_like('patients.name', $keyword);
-			$this->db->or_like('companies.name', $keyword);
-		}
 		
 		$this->db->from('patients');
 		$this->db->join('companies', 'companies.id=patients.id_company', 'left');
 		$this->db->join('mcus_v1', 'mcus_v1.id_patient=patients.id', 'left');
 
+		$this->db->where('patients.is_deleted', 0);
+
 		if ($company != 'all') {
 			$this->db->where('id_company', $company);
 		}
 
-		$this->db->where('patients.is_deleted', 0);
+		if ($keyword) {
+			$this->db->where("(id_number LIKE '%".$keyword."%' OR passport_number LIKE '%".$keyword."%' OR patients.name LIKE '%".$keyword."%' OR companies.name LIKE '%".$keyword."%')", NULL, FALSE);
+		}
 
 		$this->db->group_by('patients.id');
 
