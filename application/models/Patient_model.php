@@ -24,7 +24,7 @@ class Patient_model extends CI_Model
 			$this->db->where('id_company', $company);
 		}
 
-		$this->db->where('patients.is_deleted', '0');
+		$this->db->where('patients.is_deleted', 0);
 
 		$this->db->group_by('patients.id');
 
@@ -52,7 +52,7 @@ class Patient_model extends CI_Model
 			$this->db->where('id_company', $company);
 		}
 
-		$this->db->where('patients.is_deleted', '0');
+		$this->db->where('patients.is_deleted', 0);
 
 		$this->db->group_by('patients.id');
 

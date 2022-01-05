@@ -18,40 +18,53 @@
                     <i class="far fa-fw fa-chart-bar"></i> Dashboard
                 </a>
             </li>
-            <li class="list-group-item <?php if ($title == 'Pengguna') : ?> active <?php endif ?>">
-                <a href="<?= base_url('user') ?>">
-                    <i class="fas fa-fw fa-chalkboard-teacher"></i> Pengguna
-                </a>
-            </li>
-            <li class="list-group-item <?php if ($title == 'Klinik') : ?> active <?php endif ?>">
-                <a href="<?= base_url('clinic') ?>">
-                    <i class="fas fa-fw fa-clinic-medical"></i> Klinik
-                </a>
-            </li>
-            <li class="list-group-item <?php if ($title == 'Perusahaan') : ?> active <?php endif ?>">
-                <a href="<?= base_url('company') ?>">
-                    <i class="fas fa-fw fa-city"></i> Perusahaan
-                </a>
-            </li>
-            <li class="list-group-item <?php if ($title == 'Pasien') : ?> active <?php endif ?>">
-                <a href="<?= base_url('patient') ?>">
-                    <i class="fas fa-fw fa-users"></i> Pasien
-                </a>
-            </li>
-            <li class="list-group-item <?php if ($title == 'Cek Pasien') : ?> active <?php endif ?>">
-                <a href="<?= base_url('patient/indexCheck') ?>">
-                    <i class="fas fa-fw fa-person-booth"></i> Cek Pasien</li>
-                </a>
-            <li class="list-group-item <?php if ($title == 'Transaksi') : ?> active <?php endif ?>">
-                <a href="<?= base_url('transaction') ?>">
-                    <i class="fas fa-fw fa-cash-register"></i> Transaksi
-                </a>
-            </li>
-            <li class="list-group-item <?php if ($title == 'Hasil Lab') : ?> active <?php endif ?>">
-                <a href="<?= base_url('mcu') ?>">
-                    <i class="fas fa-fw fa-book-medical"></i> Hasil Lab
-                </a>
-            </li>
+            <?php if ($this->session->userdata('role') == 'superuser') : ?>
+                <li class="list-group-item <?php if ($title == 'Pengguna') : ?> active <?php endif ?>">
+                    <a href="<?= base_url('user') ?>">
+                        <i class="fas fa-fw fa-chalkboard-teacher"></i> Pengguna
+                    </a>
+                </li>
+                <li class="list-group-item <?php if ($title == 'Klinik') : ?> active <?php endif ?>">
+                    <a href="<?= base_url('clinic') ?>">
+                        <i class="fas fa-fw fa-clinic-medical"></i> Klinik
+                    </a>
+                </li>
+            <?php endif ?>
+            <?php if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'admin') : ?>
+                <li class="list-group-item <?php if ($title == 'Perusahaan') : ?> active <?php endif ?>">
+                    <a href="<?= base_url('company') ?>">
+                        <i class="fas fa-fw fa-city"></i> Perusahaan
+                    </a>
+                </li>
+            <?php endif ?>
+            <?php if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'doctor') : ?>
+                <li class="list-group-item <?php if ($title == 'Pasien') : ?> active <?php endif ?>">
+                    <a href="<?= base_url('patient') ?>">
+                        <i class="fas fa-fw fa-users"></i> Pasien
+                    </a>
+                </li>
+            <?php endif ?>
+            <?php if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'examinator') : ?>
+                <li class="list-group-item <?php if ($title == 'Cek Pasien') : ?> active <?php endif ?>">
+                    <a href="<?= base_url('patient/indexCheck') ?>">
+                        <i class="fas fa-fw fa-person-booth"></i> Cek Pasien</li>
+                    </a>
+                </li>
+            <?php endif ?>
+            <?php if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'admin') : ?>
+                <li class="list-group-item <?php if ($title == 'Transaksi') : ?> active <?php endif ?>">
+                    <a href="<?= base_url('transaction') ?>">
+                        <i class="fas fa-fw fa-cash-register"></i> Transaksi
+                    </a>
+                </li>
+            <?php endif ?>
+            <?php if ($this->session->userdata('role') == 'superuser' || $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'doctor') : ?>
+                <li class="list-group-item <?php if ($title == 'Hasil Lab') : ?> active <?php endif ?>">
+                    <a href="<?= base_url('mcu') ?>">
+                        <i class="fas fa-fw fa-book-medical"></i> Hasil Lab
+                    </a>
+                </li>
+            <?php endif ?>
         </ul>
     </nav>
 </div>
