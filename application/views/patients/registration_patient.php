@@ -389,7 +389,13 @@
 				},
 			})
 			.done(function(data) {
-				if (data > 0) {
+				if (data == "duplicate_mrn") {
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: 'Duplicate Medical Record Number'
+					})
+				} else if ( data > 0) {
 					Swal.fire({
 						title: 'Success',
 						icon: 'success',

@@ -234,189 +234,195 @@ class Patient extends CI_Controller
 
 	public function registrationPatientProcess()
 	{
-		$id_number_old 		 = $this->input->post('id_number_old', TRUE);
-		$id_number 			 = $this->input->post('id_number', TRUE);
-		$duplicate_id_number = $this->patient->get_patient_exist($id_number_old);
+		$id_number_old 		  = $this->input->post('id_number_old', TRUE);
+		$id_number 			  = $this->input->post('id_number', TRUE);
+		$mcu_manual 		  = $this->input->post('mcu_manual');
+		$duplicate_mcu_manual = $this->patient->get_mrn_exist($mcu_manual);
+		$duplicate_id_number  = $this->patient->get_patient_exist($id_number_old);
 
-		if ($duplicate_id_number > 0) {
-			/*
-				Process if the patient already exist	
-			*/
-
-			$image    = $this->input->post('image');
-			$image    = str_replace('data:image/jpeg;base64,', '', $image);
-			$image    = base64_decode($image);
-			$filename = 'image_' . $id_number . '_' . time() . '.jpg';
-
-			$this->patient->filePut($filename, $image);
-
-			// Get data patient exist
-			$id_patient_exist = $this->patient->get_data_patient_by_id_number($id_number_old)['id'];
-
-			$data_patient = [
-				'id_number' 	  		=> $id_number,
-				'passport_number' 		=> $this->input->post('passport_number', TRUE),
-				'name'		 	  		=> strtoupper($this->input->post('name', TRUE)),
-				'gender' 		  		=> $this->input->post('gender', TRUE),
-				'place_of_birth'  		=> strtoupper($this->input->post('place_of_birth', TRUE)),
-				'date_of_birth'   		=> $this->input->post('date_of_birth', TRUE),
-				'address' 		  		=> $this->input->post('address', TRUE),
-				'basic_safety_training'	=> $this->input->post('basic_safety_training', TRUE),
-				'nationality' 	  		=> strtoupper($this->input->post('nationality', TRUE)),
-				'id_company'	 	  	=> $this->input->post('id_company', TRUE),
-				'occupation'	 	  	=> strtoupper($this->input->post('occupation', TRUE)),
-				'updated_at'	  		=> date('Y-m-d H:i:s')
-			];
-
-			// Update data to table patients, mcus and transactions
-			$this->patient->update_table_patients_mcus_transactions($id_patient_exist, $data_patient, $id_number, strtoupper($this->input->post('name', TRUE)));
-
-			// Make new laboratory examination
-			$type_examination = $this->input->post('type_examination', TRUE);
-
-			$url_for_qrcode		   = base_url('mcu/mcuResultPreview/');
-			$medical_record_number = $this->mcu->get_medical_record_number($type_examination);
-			$no_transaction		   = $this->mcu->get_no_transaction($id_patient_exist, $type_examination);
-
-			// Save file image of qrcode
-			$this->load->library('ciqrcode');
-
-			$configUploadQrcode['cacheable'] = true;
-			$configUploadQrcode['cachedir']	 = './assets/';
-			$configUploadQrcode['errorlog']  = './assets/';
-			$configUploadQrcode['imagedir']  = './assets/images/qrcode/';
-			$configUploadQrcode['quality']   = true;
-			$configUploadQrcode['size']      = '1024';
-			$configUploadQrcode['black']     = array(224, 255, 255);
-			$configUploadQrcode['white']     = array(70, 130, 180);
-			$this->ciqrcode->initialize($configUploadQrcode);
-
-			$image_name = $medical_record_number . '.png';
-
-			$params['data']  	= $url_for_qrcode . $medical_record_number;
-			$params['level'] 	= 'H';
-			$params['size']  	= 10;
-			$params['savename'] = FCPATH . $configUploadQrcode['imagedir'] . $image_name;
-			$this->ciqrcode->generate($params);
-
-			$data_mcus_v1 = [
-				'medical_record_number' => $medical_record_number,
-				'mcu_manual'			=> $this->input->post('mcu_manual'),
-				'id_clinic'				=> $this->input->post('id_clinic'),
-				'id_patient'			=> $id_patient_exist,
-				'id_number_patient'		=> $id_number,
-				'name_patient'			=> strtoupper($this->input->post('name', TRUE)),
-				'no_transaction'		=> $no_transaction,
-				'type_examination'		=> $type_examination,
-				'date_examination'		=> $this->input->post('date_examination'),
-				'image'					=> $filename,
-				'qrcode'				=> $image_name,
-				'created_at'			=> date('Y-m-d H:i:s')
-			];
-
-			$data_transactions = [
-				'no_transaction'		=> $no_transaction,
-				'id_clinic'				=> $this->input->post('id_clinic'),
-				'id_patient' 			=> $id_patient_exist,
-				'id_company' 			=> $this->input->post('id_company', TRUE),
-				'medical_record_number' => $medical_record_number,
-				'patient_name' 			=> strtoupper($this->input->post('name', TRUE)),
-				'patient_id_number' 	=> $id_number,
-				'type_examination' 		=> $type_examination,
-				'type_transaction'	 	=> $this->input->post('type_transaction'),
-				'total_price' 			=> preg_replace("/[^0-9]/", "", $this->input->post('total_price'))
-			];
-
-			$this->mcu->store_to_table_mcus_v1($data_mcus_v1);
-			$this->mcu->store_to_table_transactions($data_transactions);
-
-			echo json_encode($id_patient_exist);
+		if ($duplicate_mcu_manual > 0) {
+			echo json_encode("duplicate_mrn");
 		} else {
-			$image    = $this->input->post('image');
-			$image    = str_replace('data:image/jpeg;base64,', '', $image);
-			$image    = base64_decode($image);
-			$filename = 'image_' . $id_number . '_' . time() . '.jpg';
+			if ($duplicate_id_number > 0) {
+				/*
+					Process if the patient already exist	
+				*/
 
-			$this->patient->filePut($filename, $image);
+				$image    = $this->input->post('image');
+				$image    = str_replace('data:image/jpeg;base64,', '', $image);
+				$image    = base64_decode($image);
+				$filename = 'image_' . $id_number . '_' . time() . '.jpg';
 
-			$data_patient = [
-				'id_number' 	  		=> $id_number,
-				'passport_number' 		=> $this->input->post('passport_number', TRUE),
-				'name'		 	  		=> strtoupper($this->input->post('name', TRUE)),
-				'gender' 		  		=> $this->input->post('gender', TRUE),
-				'place_of_birth'  		=> strtoupper($this->input->post('place_of_birth', TRUE)),
-				'date_of_birth'   		=> $this->input->post('date_of_birth', TRUE),
-				'address' 		  		=> $this->input->post('address', TRUE),
-				'basic_safety_training'	=> $this->input->post('basic_safety_training', TRUE),
-				'nationality' 	  		=> strtoupper($this->input->post('nationality', TRUE)),
-				'id_company'	 	  	=> $this->input->post('id_company', TRUE),
-				'occupation'	 	  	=> strtoupper($this->input->post('occupation', TRUE)),
-				'created_at'	  		=> date('Y-m-d H:i:s')
-			];
+				$this->patient->filePut($filename, $image);
 
-			// Save data to table patients
-			$id_patient = $this->patient->store_to_table_patients($data_patient);
+				// Get data patient exist
+				$id_patient_exist = $this->patient->get_data_patient_by_id_number($id_number_old)['id'];
 
-			// Make new laboratory examination
-			$type_examination = $this->input->post('type_examination', TRUE);
+				$data_patient = [
+					'id_number' 	  		=> $id_number,
+					'passport_number' 		=> $this->input->post('passport_number', TRUE),
+					'name'		 	  		=> strtoupper($this->input->post('name', TRUE)),
+					'gender' 		  		=> $this->input->post('gender', TRUE),
+					'place_of_birth'  		=> strtoupper($this->input->post('place_of_birth', TRUE)),
+					'date_of_birth'   		=> $this->input->post('date_of_birth', TRUE),
+					'address' 		  		=> $this->input->post('address', TRUE),
+					'basic_safety_training'	=> $this->input->post('basic_safety_training', TRUE),
+					'nationality' 	  		=> strtoupper($this->input->post('nationality', TRUE)),
+					'id_company'	 	  	=> $this->input->post('id_company', TRUE),
+					'occupation'	 	  	=> strtoupper($this->input->post('occupation', TRUE)),
+					'updated_at'	  		=> date('Y-m-d H:i:s')
+				];
 
-			$url_for_qrcode		   = base_url('mcu/mcuResultPreview/');
-			$medical_record_number = $this->mcu->get_medical_record_number($type_examination);
-			$no_transaction		   = $this->mcu->get_no_transaction($id_patient, $type_examination);
+				// Update data to table patients, mcus and transactions
+				$this->patient->update_table_patients_mcus_transactions($id_patient_exist, $data_patient, $id_number, strtoupper($this->input->post('name', TRUE)));
 
-			// Save file image of qrcode
-			$this->load->library('ciqrcode');
+				// Make new laboratory examination
+				$type_examination = $this->input->post('type_examination', TRUE);
 
-			$configUploadQrcode['cacheable'] = true;
-			$configUploadQrcode['cachedir']	 = './assets/';
-			$configUploadQrcode['errorlog']  = './assets/';
-			$configUploadQrcode['imagedir']  = './assets/images/qrcode/';
-			$configUploadQrcode['quality']   = true;
-			$configUploadQrcode['size']      = '1024';
-			$configUploadQrcode['black']     = array(224, 255, 255);
-			$configUploadQrcode['white']     = array(70, 130, 180);
-			$this->ciqrcode->initialize($configUploadQrcode);
+				$url_for_qrcode		   = base_url('mcu/mcuResultPreview/');
+				$medical_record_number = $this->mcu->get_medical_record_number($type_examination);
+				$no_transaction		   = $this->mcu->get_no_transaction($id_patient_exist, $type_examination);
 
-			$image_name = $medical_record_number . '.png';
+				// Save file image of qrcode
+				$this->load->library('ciqrcode');
 
-			$params['data']  	= $url_for_qrcode . $medical_record_number;
-			$params['level'] 	= 'H';
-			$params['size']  	= 10;
-			$params['savename'] = FCPATH . $configUploadQrcode['imagedir'] . $image_name;
-			$this->ciqrcode->generate($params);
+				$configUploadQrcode['cacheable'] = true;
+				$configUploadQrcode['cachedir']	 = './assets/';
+				$configUploadQrcode['errorlog']  = './assets/';
+				$configUploadQrcode['imagedir']  = './assets/images/qrcode/';
+				$configUploadQrcode['quality']   = true;
+				$configUploadQrcode['size']      = '1024';
+				$configUploadQrcode['black']     = array(224, 255, 255);
+				$configUploadQrcode['white']     = array(70, 130, 180);
+				$this->ciqrcode->initialize($configUploadQrcode);
 
-			$data_mcus_v1 = [
-				'medical_record_number' => $medical_record_number,
-				'mcu_manual'			=> $this->input->post('mcu_manual'),
-				'id_clinic'				=> $this->input->post('id_clinic'),
-				'id_patient'			=> $id_patient,
-				'id_number_patient'		=> $id_number,
-				'name_patient'			=> strtoupper($this->input->post('name', TRUE)),
-				'no_transaction'		=> $no_transaction,
-				'type_examination'		=> $type_examination,
-				'date_examination'		=> $this->input->post('date_examination'),
-				'image'					=> $filename,
-				'qrcode'				=> $image_name,
-				'created_at'			=> date('Y-m-d H:i:s')
-			];
+				$image_name = $medical_record_number . '.png';
 
-			$data_transactions = [
-				'no_transaction'		=> $no_transaction,
-				'id_clinic'				=> $this->input->post('id_clinic'),
-				'id_patient' 			=> $id_patient,
-				'id_company' 			=> $this->input->post('id_company', TRUE),
-				'medical_record_number' => $medical_record_number,
-				'patient_name' 			=> strtoupper($this->input->post('name', TRUE)),
-				'patient_id_number' 	=> $id_number,
-				'type_examination' 		=> $type_examination,
-				'type_transaction'	 	=> $this->input->post('type_transaction'),
-				'total_price' 			=> preg_replace("/[^0-9]/", "", $this->input->post('total_price'))
-			];
+				$params['data']  	= $url_for_qrcode . $medical_record_number;
+				$params['level'] 	= 'H';
+				$params['size']  	= 10;
+				$params['savename'] = FCPATH . $configUploadQrcode['imagedir'] . $image_name;
+				$this->ciqrcode->generate($params);
 
-			$this->mcu->store_to_table_mcus_v1($data_mcus_v1);
-			$this->mcu->store_to_table_transactions($data_transactions);
+				$data_mcus_v1 = [
+					'medical_record_number' => $medical_record_number,
+					'mcu_manual'			=> $mcu_manual,
+					'id_clinic'				=> $this->input->post('id_clinic'),
+					'id_patient'			=> $id_patient_exist,
+					'id_number_patient'		=> $id_number,
+					'name_patient'			=> strtoupper($this->input->post('name', TRUE)),
+					'no_transaction'		=> $no_transaction,
+					'type_examination'		=> $type_examination,
+					'date_examination'		=> $this->input->post('date_examination'),
+					'image'					=> $filename,
+					'qrcode'				=> $image_name,
+					'created_at'			=> date('Y-m-d H:i:s')
+				];
 
-			echo json_encode($id_patient);
+				$data_transactions = [
+					'no_transaction'		=> $no_transaction,
+					'id_clinic'				=> $this->input->post('id_clinic'),
+					'id_patient' 			=> $id_patient_exist,
+					'id_company' 			=> $this->input->post('id_company', TRUE),
+					'medical_record_number' => $medical_record_number,
+					'patient_name' 			=> strtoupper($this->input->post('name', TRUE)),
+					'patient_id_number' 	=> $id_number,
+					'type_examination' 		=> $type_examination,
+					'type_transaction'	 	=> $this->input->post('type_transaction'),
+					'total_price' 			=> preg_replace("/[^0-9]/", "", $this->input->post('total_price'))
+				];
+
+				$this->mcu->store_to_table_mcus_v1($data_mcus_v1);
+				$this->mcu->store_to_table_transactions($data_transactions);
+
+				echo json_encode($id_patient_exist);
+			} else {
+				$image    = $this->input->post('image');
+				$image    = str_replace('data:image/jpeg;base64,', '', $image);
+				$image    = base64_decode($image);
+				$filename = 'image_' . $id_number . '_' . time() . '.jpg';
+
+				$this->patient->filePut($filename, $image);
+
+				$data_patient = [
+					'id_number' 	  		=> $id_number,
+					'passport_number' 		=> $this->input->post('passport_number', TRUE),
+					'name'		 	  		=> strtoupper($this->input->post('name', TRUE)),
+					'gender' 		  		=> $this->input->post('gender', TRUE),
+					'place_of_birth'  		=> strtoupper($this->input->post('place_of_birth', TRUE)),
+					'date_of_birth'   		=> $this->input->post('date_of_birth', TRUE),
+					'address' 		  		=> $this->input->post('address', TRUE),
+					'basic_safety_training'	=> $this->input->post('basic_safety_training', TRUE),
+					'nationality' 	  		=> strtoupper($this->input->post('nationality', TRUE)),
+					'id_company'	 	  	=> $this->input->post('id_company', TRUE),
+					'occupation'	 	  	=> strtoupper($this->input->post('occupation', TRUE)),
+					'created_at'	  		=> date('Y-m-d H:i:s')
+				];
+
+				// Save data to table patients
+				$id_patient = $this->patient->store_to_table_patients($data_patient);
+
+				// Make new laboratory examination
+				$type_examination = $this->input->post('type_examination', TRUE);
+
+				$url_for_qrcode		   = base_url('mcu/mcuResultPreview/');
+				$medical_record_number = $this->mcu->get_medical_record_number($type_examination);
+				$no_transaction		   = $this->mcu->get_no_transaction($id_patient, $type_examination);
+
+				// Save file image of qrcode
+				$this->load->library('ciqrcode');
+
+				$configUploadQrcode['cacheable'] = true;
+				$configUploadQrcode['cachedir']	 = './assets/';
+				$configUploadQrcode['errorlog']  = './assets/';
+				$configUploadQrcode['imagedir']  = './assets/images/qrcode/';
+				$configUploadQrcode['quality']   = true;
+				$configUploadQrcode['size']      = '1024';
+				$configUploadQrcode['black']     = array(224, 255, 255);
+				$configUploadQrcode['white']     = array(70, 130, 180);
+				$this->ciqrcode->initialize($configUploadQrcode);
+
+				$image_name = $medical_record_number . '.png';
+
+				$params['data']  	= $url_for_qrcode . $medical_record_number;
+				$params['level'] 	= 'H';
+				$params['size']  	= 10;
+				$params['savename'] = FCPATH . $configUploadQrcode['imagedir'] . $image_name;
+				$this->ciqrcode->generate($params);
+
+				$data_mcus_v1 = [
+					'medical_record_number' => $medical_record_number,
+					'mcu_manual'			=> $mcu_manual,
+					'id_clinic'				=> $this->input->post('id_clinic'),
+					'id_patient'			=> $id_patient,
+					'id_number_patient'		=> $id_number,
+					'name_patient'			=> strtoupper($this->input->post('name', TRUE)),
+					'no_transaction'		=> $no_transaction,
+					'type_examination'		=> $type_examination,
+					'date_examination'		=> $this->input->post('date_examination'),
+					'image'					=> $filename,
+					'qrcode'				=> $image_name,
+					'created_at'			=> date('Y-m-d H:i:s')
+				];
+
+				$data_transactions = [
+					'no_transaction'		=> $no_transaction,
+					'id_clinic'				=> $this->input->post('id_clinic'),
+					'id_patient' 			=> $id_patient,
+					'id_company' 			=> $this->input->post('id_company', TRUE),
+					'medical_record_number' => $medical_record_number,
+					'patient_name' 			=> strtoupper($this->input->post('name', TRUE)),
+					'patient_id_number' 	=> $id_number,
+					'type_examination' 		=> $type_examination,
+					'type_transaction'	 	=> $this->input->post('type_transaction'),
+					'total_price' 			=> preg_replace("/[^0-9]/", "", $this->input->post('total_price'))
+				];
+
+				$this->mcu->store_to_table_mcus_v1($data_mcus_v1);
+				$this->mcu->store_to_table_transactions($data_transactions);
+
+				echo json_encode($id_patient);
+			}
 		}
 	}
 
