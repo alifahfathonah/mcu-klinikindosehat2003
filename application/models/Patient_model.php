@@ -83,6 +83,13 @@ class Patient_model extends CI_Model
 		return $result;
 	}
 
+	function get_mrn_exist( $mrn )
+	{
+		$result = $this->db->get_where('mcus_v1', array('mcu_manual' => $mrn))->num_rows();
+
+		return $result;
+	}
+
 	function filePut($filename, $image)
 	{
 		file_put_contents(FCPATH . 'assets/images/patients/' . $filename, $image);
